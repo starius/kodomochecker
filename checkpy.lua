@@ -2,6 +2,16 @@ local checkpy = {}
 
 local pf = string.format
 
+local execute
+if _VERSION == 'Lua 5.2' then
+    execute = os.execute
+elseif _VERSION == 'Lua 5.1' then
+    execute = function(...)
+        local status = os.execute(...)
+        return status == 0
+    end
+end
+
 checkpy.checkpy = function(task, py)
     if not checkpy.tmpin_fname then
         checkpy.tmpin_fname = os.tmpname()
@@ -15,7 +25,7 @@ checkpy.checkpy = function(task, py)
     tmpin:close()
     local cmd = pf('python %s < %s > %s 2>&1', py,
         checkpy.tmpin_fname, checkpy.tmpout_fname)
-    local run_ok = os.execute(cmd)
+    local run_ok = execute(cmd)
     local tmpout = io.open(checkpy.tmpout_fname, 'r')
     local task_out = tmpout:read('*a')
     tmpout:close()
