@@ -4,12 +4,7 @@ local checkpy = require('checkpy').checkpy
 local pr8 = require('pr8')
 local excel_list = require('kurs1').excel_list
 
-local sh = function(cmd)
-    local f = io.popen(cmd, 'r')
-    local out = f:read('*a')
-    f:close()
-    return out
-end
+local sh = require('sh')
 
 -- based on http://lua-users.org/wiki/SplitJoin
 function string:split(sep, nMax, plain)
@@ -39,8 +34,10 @@ local pf = string.format
 
 checkall.find_py = function(stud, mnem)
     if not checkall.all_files then
-        checkall.all_files = sh("find py | grep '\\.py$'"):split('\n')
+        checkall.all_files =
+            sh("find py | grep '\\.py$'"):split('\n')
     end
+    mnem = mnem:gsub('%-', '%%%-')
     for _, py in ipairs(checkall.all_files) do
         if py:match(stud) and py:match(mnem .. '.py') then
             return py
@@ -82,7 +79,7 @@ checkall.set_result = function(stud, mnem, py, ok, report, fi)
             fname = 'py/' .. stud .. '_pr8_' .. mnem .. '.txt'
         end
         local report_file = io.open(fname, 'a')
-        report_file:write(report)
+        report_file:write(report .. '\n')
         report_file:close()
     end
 end
