@@ -20,7 +20,7 @@ checkpy.checkpy = function(task, py)
     local task_out = tmpout:read('*a')
     tmpout:close()
     if not run_ok then
-        return false, 'python error', '', task_in, task_out
+        return false, 'python error', 'none', task_in, task_out
     end
     local ok, message = task_check(task_out)
     if not ok then
