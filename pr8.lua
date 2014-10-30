@@ -46,17 +46,21 @@ local find_number = function(t, n)
            t:match('%D' .. n .. '%D')
 end
 
-pr8['protein-length'] = {
-function()
-    local start = rr(100, 1000)
-    local result = rr(10, 100)
-    local stop = start + (result + 1) * 3 - 1
-    return start .. '\n' .. stop, function(out)
+local match_number = function(result)
+    return function(out)
         if not find_number(out, result) then
             return false, 'выход не содержит правильный ответ ' .. result
         end
         return true
     end
+end
+
+pr8['protein-length'] = {
+function()
+    local start = rr(100, 1000)
+    local result = rr(10, 100)
+    local stop = start + (result + 1) * 3 - 1
+    return start .. '\n' .. stop, match_number(result)
 end
 }
 
@@ -65,12 +69,16 @@ function()
     local a = rr(10, 100)
     local b = rr(10, 100)
     local result = sh(pf('python -c "print(len(str(%i ** %i)))"', a, b))
-    return a .. '\n' .. b, function(out)
-        if not find_number(out, result) then
-            return false, 'выход не содержит правильный ответ ' .. result
-        end
-        return true
-    end
+    return a .. '\n' .. b, match_number(result)
+end
+}
+
+pr8['hypotenuse'] = {
+function()
+    local a = rr(10, 100) / 10
+    local b = rr(10, 100) / 10
+    local result = (a^2 + b^2) ^ 0.5
+    return a .. '\n' .. b, match_number(result)
 end
 }
 
