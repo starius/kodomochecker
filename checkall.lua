@@ -50,17 +50,18 @@ end
 
 excel = {}
 
-local err = [[Error!!!
-Your script doesn't work or works in wrong way!
+local err = [[Ой, ошибка!
+Ваш скрипт не работает или работает неправильно.
+Исправьте ваш скрипт, пожалуйста.
 
-Here is some information about the error.
+Немного информации о проблеме:
 
-Error message: %s
+Сообщение об ошибке: %s
 
-Input:
+Что вводили в программу (вход):
 %s
 
-Output:
+Что выдала программа (выход):
 %s
 ]]
 
@@ -93,7 +94,7 @@ checkall.checkall = function()
                 else
                     local m = m1
                     if m2 ~= 'none' then
-                        m = m .. '\nError message 2: ' .. m2
+                        m = m .. '\nРазъяснение: ' .. m2
                     end
                     local report = pf(err, m, task_in, task_out)
                     checkall.set_result(stud, mnem, py, false, report)

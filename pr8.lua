@@ -23,10 +23,10 @@ pr8.hello = function()
     local name = genname()
     return name, function(out)
         if not out:lower():match('hello') then
-            return false, 'no "hello" in output'
+            return false, 'в выходе нет "hello"'
         end
         if not out:match(name) then
-            return false, 'no desired name in output'
+            return false, 'в выходе нет имени, введённого пользователем'
         end
         return true
     end
