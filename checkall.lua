@@ -63,22 +63,31 @@ local err = [[Ой, ошибка!
 
 Что выдала программа (выход):
 %s
+
+===========================
 ]]
 
-checkall.set_result = function(stud, mnem, py, ok, report)
-    excel[stud .. '|' .. mnem] = ok
-    if not ok then
+local fiseen = {}
+
+checkall.set_result = function(stud, mnem, py, ok, report, fi)
+    if excel[stud .. '|' .. mnem] ~= false then
+        excel[stud .. '|' .. mnem] = ok
+    end
+    if not ok and not fiseen[stud .. '|' .. mnem .. '|' .. fi] then
+        fiseen[stud .. '|' .. mnem .. '|' .. fi] = true
         local fname
         if py then
             fname = py .. '.txt'
         else
             fname = 'py/' .. stud .. '_pr8_' .. mnem .. '.txt'
         end
-        local report_file = io.open(fname, 'w')
+        local report_file = io.open(fname, 'a')
         report_file:write(report)
         report_file:close()
     end
 end
+
+checkall.N = 10
 
 checkall.checkall = function()
     for _, stud in ipairs(excel_list) do
@@ -86,18 +95,23 @@ checkall.checkall = function()
             local py = checkall.find_py(stud, mnem)
             if not py then
                 checkall.set_result(stud, mnem, py, false,
-                    'No Python file found!')
+                    'No Python file found!', 'nopy')
             else
-                local ok, m1, m2, task_in, task_out = checkpy(task, py)
-                if ok then
-                    checkall.set_result(stud, mnem, py, true)
-                else
-                    local m = m1
-                    if m2 ~= 'none' then
-                        m = m .. '\nРазъяснение: ' .. m2
+                for fi, func in ipairs(task) do
+                    for i = 1, checkall.N do
+                        local ok, m1, m2, task_in, task_out = checkpy(func, py)
+                        if ok then
+                            checkall.set_result(stud, mnem, py, true)
+                        else
+                            local m = m1
+                            if m2 ~= 'none' then
+                                m = m .. '\nРазъяснение: ' .. m2
+                            end
+                            local report = pf(err, m, task_in, task_out)
+                            checkall.set_result(stud, mnem, py, false,
+                                report, fi)
+                        end
                     end
-                    local report = pf(err, m, task_in, task_out)
-                    checkall.set_result(stud, mnem, py, false, report)
                 end
             end
         end

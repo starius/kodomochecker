@@ -19,7 +19,8 @@ end
 
 local pr8 = {}
 
-pr8.hello = function()
+pr8.hello = {
+function()
     local name = genname()
     return name, function(out)
         if not out:lower():match('hello') then
@@ -31,5 +32,6 @@ pr8.hello = function()
         return true
     end
 end
+}
 
 return pr8
