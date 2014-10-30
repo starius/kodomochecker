@@ -56,7 +56,6 @@ Your script doesn't work or works in wrong way!
 Here is some information about the error.
 
 Error message: %s
-Error message 2: %s
 
 Input:
 %s
@@ -92,7 +91,11 @@ checkall.checkall = function()
                 if ok then
                     checkall.set_result(stud, mnem, py, true)
                 else
-                    local report = pf(err, m1, m2, task_in, task_out)
+                    local m = m1
+                    if m2 ~= 'none' then
+                        m = m .. '\nError message 2: ' .. m2
+                    end
+                    local report = pf(err, m, task_in, task_out)
                     checkall.set_result(stud, mnem, py, false, report)
                 end
             end
