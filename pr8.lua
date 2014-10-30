@@ -82,4 +82,43 @@ function()
 end
 }
 
+pr8['last-digit'] = {
+function()
+    local a = rr(1000, 9999)
+    local result = a % 10
+    return a, match_number(result)
+end
+}
+
+pr8['repeat'] = {
+function()
+    local t = shortrand()
+    local n = rr(3, 7)
+    local result = t .. string.rep(',' .. t, n - 1)
+    return t .. '\n' .. n, function(out)
+        if not out:match(result) then
+            return false, 'выход не содержит правильный ответ ' .. result
+        end
+        local start, stop = out:find(result)
+        if start > 1 and out:sub(start - 1, start - 1) == t:sub(-1,-1) then
+            return false, [[выход содержит что-то лишнее рядом с
+                правильным ответом ]] .. result
+        end
+        if start > 1 and out:sub(start - 1, start - 1) == ',' then
+            return false, [[выход содержит что-то лишнее рядом с
+                правильным ответом ]] .. result
+        end
+        if out:sub(stop + 1, stop + 1) == ',' then
+            return false, [[выход содержит что-то лишнее рядом с
+                правильным ответом ]] .. result
+        end
+        if out:sub(stop + 1, stop + 1) == t:sub(1,1) then
+            return false, [[выход содержит что-то лишнее рядом с
+                правильным ответом ]] .. result
+        end
+        return true
+    end
+end
+}
+
 return pr8
