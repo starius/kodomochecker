@@ -121,4 +121,32 @@ function()
 end
 }
 
+pr8['exp'] = {
+function()
+    local a = rr(1, 20)
+    local result = math.floor(math.exp(20) + 0.5)
+    return a, match_number(result)
+end
+}
+
+pr8['parabola'] = {
+function()
+    local b = rr(-1000, 1000) / 100
+    local c = rr(-1000, 1000) / 100
+    local x = -b/2
+    local y = x^2 + b * x + c
+    return b .. '\n' .. c, function(out)
+        local x1 = pf('%0.1f', x)
+        local y1 = pf('%0.1f', y)
+        if out:match(x1) and out:match(y1) then
+            return true
+        else
+            return false, pf([[выдача вашей программы
+                не содержит верных чисел
+                (примерно %s и %s)]], x1, y1)
+        end
+    end
+end
+}
+
 return pr8
