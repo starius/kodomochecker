@@ -22,6 +22,14 @@ local genname = function()
     return shortrand() .. shortrand():lower()
 end
 
+local float1 = function(x)
+    if x > 0 then
+        return tostring(math.floor(x * 10) / 10)
+    else
+        return tostring(-(math.floor(-x * 10) / 10))
+    end
+end
+
 local pr8 = {}
 
 pr8.hello = {
@@ -46,9 +54,14 @@ local find_number = function(t, n)
            t:match('%D' .. n .. '%D')
 end
 
-local match_number = function(result)
+local find_float = function(t, n)
+    return t:match('^' .. n) or
+           t:match('%D' .. n)
+end
+
+local match_smth = function(result, f)
     return function(out)
-        if not find_number(out, result) then
+        if not f(out, result) then
             return false, 'выход не содержит правильный ответ ' .. result
         end
         return true
@@ -60,7 +73,7 @@ function()
     local start = rr(100, 1000)
     local result = rr(10, 100)
     local stop = start + (result + 1) * 3 - 1
-    return start .. '\n' .. stop, match_number(result)
+    return start .. '\n' .. stop, match_smth(result, find_number)
 end
 }
 
@@ -69,7 +82,7 @@ function()
     local a = rr(10, 100)
     local b = rr(10, 100)
     local result = sh(pf('python -c "print(len(str(%i ** %i)))"', a, b))
-    return a .. '\n' .. b, match_number(result)
+    return a .. '\n' .. b, match_smth(result, find_number)
 end
 }
 
@@ -78,7 +91,8 @@ function()
     local a = rr(10, 100) / 10
     local b = rr(10, 100) / 10
     local result = (a^2 + b^2) ^ 0.5
-    return a .. '\n' .. b, match_number(result)
+    local result1 = float1(result)
+    return a .. '\n' .. b, match_smth(result1, find_float)
 end
 }
 
@@ -86,7 +100,7 @@ pr8['last-digit'] = {
 function()
     local a = rr(1000, 9999)
     local result = a % 10
-    return a, match_number(result)
+    return a, match_smth(result, find_number)
 end
 }
 
@@ -124,8 +138,8 @@ end
 pr8['exp'] = {
 function()
     local a = rr(1, 20)
-    local result = math.floor(math.exp(20) + 0.5)
-    return a, match_number(result)
+    local result = math.floor(math.exp(a) + 0.5)
+    return a, match_smth(result, find_float)
 end
 }
 
@@ -136,8 +150,8 @@ function()
     local x = -b/2
     local y = x^2 + b * x + c
     return b .. '\n' .. c, function(out)
-        local x1 = pf('%0.1f', x)
-        local y1 = pf('%0.1f', y)
+        local x1 = float1(x)
+        local y1 = float1(y)
         if out:match(x1) and out:match(y1) then
             return true
         else
