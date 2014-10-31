@@ -161,6 +161,29 @@ function()
         end
     end
 end
+}},
+
+{'neutralization', {
+function()
+    local hcl = rr(0, 1000) / 100
+    local koh = rr(0, 1000) / 100
+    local kcl = math.min(hcl, koh)
+    local hcl2 = hcl - kcl
+    local koh2 = koh - kcl
+    return hcl .. '\n' .. koh, function(out)
+        if not out:match(kcl) then
+            return false, pf([[выдача вашей программы
+                не содержит верного количества KCl ]] .. kcl)
+        elseif not out:match(hcl2) then
+            return false, pf([[выдача вашей программы
+                не содержит верного количества HCl ]] .. hcl2)
+        elseif not out:match(koh2) then
+            return false, pf([[выдача вашей программы
+                не содержит верного количества KOH ]] .. koh2)
+        end
+        return true
+    end
+end
 }}
 
 }
