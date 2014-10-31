@@ -206,6 +206,27 @@ function()
         return true
     end
 end
+}},
+
+{'cookie', {
+function()
+    local a = rr(1, 20)
+    local b = rr(0, 99)
+    local c = rr(1, 20)
+    local d = rr(0, 99)
+    local n = math.floor((c * 100 + d) / (a * 100 + b))
+    return a .. '\n' .. b .. '\n' .. c .. '\n' .. d,
+        match_smth(n, find_number)
+end
+}},
+
+{'week', {
+function()
+    local jan1 = rr(1, 7)
+    local day = rr(1, 365)
+    local n = ((jan1 - 1) + (day - 1)) % 7 + 1
+    return jan1 .. '\n' .. day, match_smth(n, find_number)
+end
 }}
 
 }
