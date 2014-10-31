@@ -184,6 +184,28 @@ function()
         return true
     end
 end
+}},
+
+{'pie', {
+function()
+    local a = rr(1, 20)
+    local b = rr(0, 99)
+    local n = rr(0, 10)
+    return a .. '\n' .. b .. '\n' .. n, function(out)
+        local pie_kop = a * 100 + b
+        local all = pie_kop * n
+        local rub = math.floor(all / 100)
+        local kop = all % 100
+        if not find_number(out, rub) then
+            return false, pf([[выдача вашей программы
+                не содержит верного количества рублей ]] .. rub)
+        elseif not find_number(out, kop) then
+            return false, pf([[выдача вашей программы
+                не содержит верного количества копеек ]] .. kop)
+        end
+        return true
+    end
+end
 }}
 
 }
