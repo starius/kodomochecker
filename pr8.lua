@@ -46,13 +46,9 @@ local find_number = function(t, n)
     return false
 end
 
-local find_float = function(t, n)
-    return find_number(t, n)
-end
-
-local match_smth = function(result, f)
+local match_number = function(result)
     return function(out)
-        if not f(out, result) then
+        if not find_number(out, result) then
             return false, 'выход не содержит правильный ответ ' .. result
         end
         return true
@@ -81,7 +77,7 @@ function()
     local start = rr(100, 1000)
     local result = rr(10, 100)
     local stop = start + (result + 1) * 3 - 1
-    return start .. '\n' .. stop, match_smth(result, find_number)
+    return start .. '\n' .. stop, match_number(result)
 end
 }},
 
@@ -90,7 +86,7 @@ function()
     local a = rr(10, 100)
     local b = rr(10, 100)
     local result = sh(pf('python -c "print(len(str(%i ** %i)))"', a, b))
-    return a .. '\n' .. b, match_smth(result, find_number)
+    return a .. '\n' .. b, match_number(result)
 end
 }},
 
@@ -100,7 +96,7 @@ function()
     local b = rr(10, 100) / 10
     local result = (a^2 + b^2) ^ 0.5
     local result1 = float1(result)
-    return a .. '\n' .. b, match_smth(result1, find_float)
+    return a .. '\n' .. b, match_number(result1)
 end
 }},
 
@@ -108,7 +104,7 @@ end
 function()
     local a = rr(1000, 9999)
     local result = a % 10
-    return a, match_smth(result, find_number)
+    return a, match_number(result)
 end
 }},
 
@@ -147,7 +143,7 @@ end
 function()
     local a = rr(1, 20)
     local result = math.floor(math.exp(a) + 0.5)
-    return a, match_smth(result, find_float)
+    return a, match_number(result)
 end
 }},
 
@@ -224,7 +220,7 @@ function()
     local d = rr(0, 99)
     local n = math.floor((c * 100 + d) / (a * 100 + b))
     return a .. '\n' .. b .. '\n' .. c .. '\n' .. d,
-        match_smth(n, find_number)
+        match_number(n)
 end
 }},
 
@@ -233,7 +229,7 @@ function()
     local jan1 = rr(1, 7)
     local day = rr(1, 365)
     local n = ((jan1 - 1) + (day - 1)) % 7 + 1
-    return jan1 .. '\n' .. day, match_smth(n, find_number)
+    return jan1 .. '\n' .. day, match_number(n)
 end
 }}
 
