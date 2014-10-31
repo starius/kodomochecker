@@ -6,6 +6,8 @@ local excel_list = require('kurs1').excel_list
 
 local sh = require('sh')
 
+local unPack = unpack or table.unpack
+
 -- based on http://lua-users.org/wiki/SplitJoin
 function string:split(sep, nMax, plain)
     if not sep then
@@ -88,7 +90,8 @@ checkall.N = 10
 
 checkall.checkall = function()
     for _, stud in ipairs(excel_list) do
-        for mnem, task in pairs(pr8) do
+        for _, mnem_and_task in ipairs(pr8) do
+            local mnem, task = unPack(mnem_and_task)
             local py = checkall.find_py(stud, mnem)
             if not py then
                 checkall.set_result(stud, mnem, py, false,
@@ -117,13 +120,15 @@ end
 
 checkall.print_results = function()
     local header = 'login'
-    for mnem, _ in pairs(pr8) do
+    for _, mnem_and_task in ipairs(pr8) do
+        local mnem, task = unPack(mnem_and_task)
         header = header .. '\t' .. mnem
     end
     print(header)
     for _, stud in ipairs(excel_list) do
         local line = stud
-        for mnem, _ in pairs(pr8) do
+        for _, mnem_and_task in ipairs(pr8) do
+            local mnem, task = unPack(mnem_and_task)
             local score = 0
             if excel[stud .. '|' .. mnem] == true then
                 score = 1

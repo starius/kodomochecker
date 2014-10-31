@@ -30,23 +30,6 @@ local float1 = function(x)
     end
 end
 
-local pr8 = {}
-
-pr8.hello = {
-function()
-    local name = genname()
-    return name, function(out)
-        if not out:lower():match('hello') then
-            return false, 'в выходе нет "hello"'
-        end
-        if not out:match(name) then
-            return false, 'в выходе нет имени, введённого пользователем'
-        end
-        return true
-    end
-end
-}
-
 local find_number = function(t, n)
     return t:match('^' .. n .. '$') or
            t:match('%D' .. n .. '$') or
@@ -68,25 +51,42 @@ local match_smth = function(result, f)
     end
 end
 
-pr8['protein-length'] = {
+local pr8 = {
+
+{'hello', {
+function()
+    local name = genname()
+    return name, function(out)
+        if not out:lower():match('hello') then
+            return false, 'в выходе нет "hello"'
+        end
+        if not out:match(name) then
+            return false, 'в выходе нет имени, введённого пользователем'
+        end
+        return true
+    end
+end
+}},
+
+{'protein-length', {
 function()
     local start = rr(100, 1000)
     local result = rr(10, 100)
     local stop = start + (result + 1) * 3 - 1
     return start .. '\n' .. stop, match_smth(result, find_number)
 end
-}
+}},
 
-pr8['number-length'] = {
+{'number-length', {
 function()
     local a = rr(10, 100)
     local b = rr(10, 100)
     local result = sh(pf('python -c "print(len(str(%i ** %i)))"', a, b))
     return a .. '\n' .. b, match_smth(result, find_number)
 end
-}
+}},
 
-pr8['hypotenuse'] = {
+{'hypotenuse', {
 function()
     local a = rr(10, 100) / 10
     local b = rr(10, 100) / 10
@@ -94,17 +94,17 @@ function()
     local result1 = float1(result)
     return a .. '\n' .. b, match_smth(result1, find_float)
 end
-}
+}},
 
-pr8['last-digit'] = {
+{'last-digit', {
 function()
     local a = rr(1000, 9999)
     local result = a % 10
     return a, match_smth(result, find_number)
 end
-}
+}},
 
-pr8['repeat'] = {
+{'repeat', {
 function()
     local t = shortrand()
     local n = rr(3, 7)
@@ -133,17 +133,17 @@ function()
         return true
     end
 end
-}
+}},
 
-pr8['exp'] = {
+{'exp', {
 function()
     local a = rr(1, 20)
     local result = math.floor(math.exp(a) + 0.5)
     return a, match_smth(result, find_float)
 end
-}
+}},
 
-pr8['parabola'] = {
+{'parabola', {
 function()
     local b = rr(-1000, 1000) / 100
     local c = rr(-1000, 1000) / 100
@@ -161,6 +161,8 @@ function()
         end
     end
 end
+}}
+
 }
 
 return pr8
