@@ -31,15 +31,23 @@ local float1 = function(x)
 end
 
 local find_number = function(t, n)
-    return t:match('^' .. n .. '$') or
-           t:match('%D' .. n .. '$') or
-           t:match('^' .. n .. '%D') or
-           t:match('%D' .. n .. '%D')
+    local numbers = {}
+    for w in string.gmatch(t, "%d+") do
+        table.insert(numbers, tonumber(w))
+    end
+    for w in string.gmatch(t, "%d+%.%d") do
+        table.insert(numbers, tonumber(w))
+    end
+    for _, n1 in ipairs(numbers) do
+        if math.abs(n - n1) < 0.001 then
+            return true
+        end
+    end
+    return false
 end
 
 local find_float = function(t, n)
-    return t:match('^' .. n) or
-           t:match('%D' .. n)
+    return find_number(t, n)
 end
 
 local match_smth = function(result, f)
