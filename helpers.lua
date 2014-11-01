@@ -32,6 +32,7 @@ helpers.find_number = function(t, n)
 end
 
 assert(helpers.find_number('\n0.04 KOH', 0.039999999999999))
+assert(helpers.find_number('0\n0.07\n7.2', 0.069999999999999))
 assert(helpers.find_number('The vertix is (2.655;-11.489025)', 2.655))
 assert(helpers.find_number('The vertix is (2.655;-11.489025)', -11.489025))
 
