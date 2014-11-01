@@ -36,7 +36,8 @@ checkall.set_result = function(stud, mnem, py, ok, report, fi)
         local p8st = fi
         local p8rep = report
         if not p8st then
-            report = 'Некоторые замечания:' ..
+            report = 'Скрипт работает, но есть нарекания ' ..
+            'к оформлению кода (см. ниже по-английски):'
             '\n\n' .. report
             add_to_report(stud, mnem, 'pep8', py, report)
         else
