@@ -1,7 +1,6 @@
 local checkone = {}
 
 local checkpy = require('checkpy').checkpy
-local pr8 = require('pr8')
 
 local sh = require('sh')
 
@@ -63,8 +62,8 @@ local err = [[Ой, ошибка!
 ===========================
 ]]
 
-checkone.checkone = function(stud, mnem0, set_result)
-    for _, mnem_and_task in ipairs(pr8) do
+checkone.checkone = function(prac, stud, mnem0, set_result)
+    for _, mnem_and_task in ipairs(prac) do
         local mnem, task = unPack(mnem_and_task)
         if mnem == mnem0 then
             local py = checkone.find_py(stud, mnem)
@@ -93,10 +92,10 @@ end
 
 -- http://stackoverflow.com/a/4521960
 if not pcall(debug.getlocal, 4, 1) then
-    local stud = arg[1]
-    local mnem = arg[2]
+    local pr_name, stud, mnem = unPack(arg)
+    local prac = require(pr_name)
     for i = 1, 100 do
-        checkone.checkone(stud, mnem, function(...)
+        checkone.checkone(prac, stud, mnem, function(...)
             local s, m, py, status = ...
             if not status then
                 print(...)
