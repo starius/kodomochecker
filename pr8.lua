@@ -129,13 +129,13 @@ function()
     local hcl2 = hcl - kcl
     local koh2 = koh - kcl
     return hcl .. '\n' .. koh, function(out)
-        if not out:match(kcl) then
+        if not find_number(out, kcl) then
             return false, pf([[выдача вашей программы
                 не содержит верного количества KCl ]] .. kcl)
-        elseif not out:match(hcl2) then
+        elseif not find_number(out, hcl2) then
             return false, pf([[выдача вашей программы
                 не содержит верного количества HCl ]] .. hcl2)
-        elseif not out:match(koh2) then
+        elseif not find_number(out, koh2) then
             return false, pf([[выдача вашей программы
                 не содержит верного количества KOH ]] .. koh2)
         end
