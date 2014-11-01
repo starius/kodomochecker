@@ -6,54 +6,12 @@ local pf = string.format
 
 math.randomseed(os.time())
 
-local shortrand = function()
-    local t = {}
-    local l = math.random(3, 7)
-    for i = 1, l do
-        table.insert(t, math.random(65, 90)) -- A-Z
-    end
-    local unPack = unpack or table.unpack
-    return string.char(unPack(t))
-end
-
+local shortrand = require('helpers').shortrand
 local rr = math.random
-
-local genname = function()
-    return shortrand() .. shortrand():lower()
-end
-
-local float1 = function(x)
-    if x > 0 then
-        return tostring(math.floor(x * 10) / 10)
-    else
-        return tostring(-(math.floor(-x * 10) / 10))
-    end
-end
-
-local find_number = function(t, n)
-    local numbers = {}
-    for w in string.gmatch(t, "%d+") do
-        table.insert(numbers, tonumber(w))
-    end
-    for w in string.gmatch(t, "%d+%.%d") do
-        table.insert(numbers, tonumber(w))
-    end
-    for _, n1 in ipairs(numbers) do
-        if math.abs(n - n1) < 0.001 then
-            return true
-        end
-    end
-    return false
-end
-
-local match_number = function(result)
-    return function(out)
-        if not find_number(out, result) then
-            return false, 'выход не содержит правильный ответ ' .. result
-        end
-        return true
-    end
-end
+local genname = require('helpers').genname
+local float1 = require('helpers').float1
+local find_number = require('helpers').find_number
+local match_number = require('helpers').match_number
 
 local pr8 = {
 
