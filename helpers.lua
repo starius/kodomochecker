@@ -15,14 +15,6 @@ helpers.genname = function()
     return helpers.shortrand() .. helpers.shortrand():lower()
 end
 
-helpers.float1 = function(x)
-    if x > 0 then
-        return tostring(math.floor(x * 10) / 10)
-    else
-        return tostring(-(math.floor(-x * 10) / 10))
-    end
-end
-
 helpers.find_number = function(t, n)
     local numbers = {}
     for w in string.gmatch(t, "%d+") do

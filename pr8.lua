@@ -9,7 +9,6 @@ math.randomseed(os.time())
 local shortrand = require('helpers').shortrand
 local rr = math.random
 local genname = require('helpers').genname
-local float1 = require('helpers').float1
 local find_number = require('helpers').find_number
 local match_number = require('helpers').match_number
 
@@ -53,8 +52,7 @@ function()
     local a = rr(10, 100) / 10
     local b = rr(10, 100) / 10
     local result = (a^2 + b^2) ^ 0.5
-    local result1 = float1(result)
-    return a .. '\n' .. b, match_number(result1)
+    return a .. '\n' .. b, match_number(result)
 end
 }},
 
@@ -112,14 +110,12 @@ function()
     local x = -b/2
     local y = x^2 + b * x + c
     return b .. '\n' .. c, function(out)
-        local x1 = float1(x)
-        local y1 = float1(y)
-        if out:match(x1) and out:match(y1) then
+        if find_number(out, x) and find_number(out, y) then
             return true
         else
             return false, pf([[выдача вашей программы
                 не содержит верных чисел
-                (примерно %s и %s)]], x1, y1)
+                %s и %s]], x, y)
         end
     end
 end
