@@ -11,12 +11,10 @@ excel = {}
 
 local fiseen = {}
 
-checkall.set_result = function(stud, mnem, py, ok, report, fi)
-    if excel[stud .. '|' .. mnem] ~= false then
-        excel[stud .. '|' .. mnem] = ok
-    end
-    if not ok and not fiseen[stud .. '|' .. mnem .. '|' .. fi] then
-        fiseen[stud .. '|' .. mnem .. '|' .. fi] = true
+local add_to_report = function(stud, mnem, fi, py, report)
+    local key = stud .. '|' .. mnem .. '|' .. fi
+    if not fiseen[key] then
+        fiseen[key] = true
         local fname
         if py then
             fname = py .. '.txt'
@@ -26,6 +24,27 @@ checkall.set_result = function(stud, mnem, py, ok, report, fi)
         local report_file = io.open(fname, 'a')
         report_file:write(report .. '\n')
         report_file:close()
+    end
+end
+
+local pep8ok = {}
+
+checkall.set_result = function(stud, mnem, py, ok, report, fi)
+    local key = stud .. '|' .. mnem
+    if excel[key] ~= false then
+        excel[key] = ok
+        local p8st = fi
+        local p8rep = report
+        if not p8st then
+            report = 'Некоторые замечания:' ..
+            '\n\n' .. report
+            add_to_report(stud, mnem, 'pep8', py, report)
+        else
+            pep8ok[key] = true
+        end
+    end
+    if not ok then
+        add_to_report(stud, mnem, fi, py, report)
     end
 end
 
@@ -69,8 +88,12 @@ checkall.print_results = function(prac)
         for _, mnem_and_task in ipairs(prac) do
             local mnem, task = unPack(mnem_and_task)
             local score = 0
-            if excel[stud .. '|' .. mnem] == true then
+            local key = stud .. '|' .. mnem
+            if excel[key] == true then
                 score = 1
+                if pep8ok[key] == true then
+                    score = 1.5
+                end
             end
             line = line .. '\t' .. score
         end
