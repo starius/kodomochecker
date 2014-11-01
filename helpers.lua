@@ -17,10 +17,10 @@ end
 
 helpers.find_number = function(t, n)
     local numbers = {}
-    for w in string.gmatch(t, "%d+") do
+    for w in string.gmatch(t, "%-?%d+") do
         table.insert(numbers, tonumber(w))
     end
-    for w in string.gmatch(t, "%d+%.%d+") do
+    for w in string.gmatch(t, "%-?%d+%.%d+") do
         table.insert(numbers, tonumber(w))
     end
     for _, n1 in ipairs(numbers) do
@@ -32,6 +32,8 @@ helpers.find_number = function(t, n)
 end
 
 assert(helpers.find_number('\n0.04 KOH', 0.039999999999999))
+assert(helpers.find_number('The vertix is (2.655;-11.489025)', 2.655))
+assert(helpers.find_number('The vertix is (2.655;-11.489025)', -11.489025))
 
 helpers.match_number = function(result)
     return function(out)
