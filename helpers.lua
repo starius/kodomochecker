@@ -45,5 +45,14 @@ helpers.match_number = function(result)
     end
 end
 
+if _VERSION == 'Lua 5.2' then
+    helpers.execute = os.execute
+elseif _VERSION == 'Lua 5.1' then
+    helpers.execute = function(...)
+        local status = os.execute(...)
+        return status == 0
+    end
+end
+
 return helpers
 
