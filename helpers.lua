@@ -28,7 +28,7 @@ helpers.find_number = function(t, n)
     for w in string.gmatch(t, "%d+") do
         table.insert(numbers, tonumber(w))
     end
-    for w in string.gmatch(t, "%d+%.%d") do
+    for w in string.gmatch(t, "%d+%.%d+") do
         table.insert(numbers, tonumber(w))
     end
     for _, n1 in ipairs(numbers) do
@@ -38,6 +38,8 @@ helpers.find_number = function(t, n)
     end
     return false
 end
+
+assert(helpers.find_number('\n0.04 KOH', 0.039999999999999))
 
 helpers.match_number = function(result)
     return function(out)
