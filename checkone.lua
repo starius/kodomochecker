@@ -72,7 +72,8 @@ checkone.checkone = function(prac, stud, mnem0, set_result)
                     'No Python file found!', 'nopy')
             else
                 for fi, func in ipairs(task) do
-                    local ok, m1, m2, task_in, task_out = checkpy(func, py)
+                    local ok, m1, m2, task_in, task_out =
+                        checkpy(func, py)
                     if ok then
                         set_result(stud, mnem, py, true)
                     else
@@ -80,7 +81,8 @@ checkone.checkone = function(prac, stud, mnem0, set_result)
                         if m2 ~= 'none' then
                             m = m .. '\nРазъяснение: ' .. m2
                         end
-                        local report = pf(err, m, task_in, task_out)
+                        local report =
+                            pf(err, m, task_in, task_out)
                         set_result(stud, mnem, py, false,
                             report, fi)
                     end
