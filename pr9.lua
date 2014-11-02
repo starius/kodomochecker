@@ -20,6 +20,7 @@ local bool_wrapper = require('helpers').bool_wrapper
 local one_of = require('helpers').one_of
 local unPack = require('helpers').unPack
 local copy_list = require('helpers').copy_list
+local read_file = require('helpers').read_file
 
 local kurs1 = require('kurs1')
 
@@ -378,6 +379,37 @@ function()
 end,
 
 }},
+
+{'gc', {
+function()
+    local f = io.open('input.fasta', 'w')
+    local seqs_n = rr(1, 3)
+    local gc = 0
+    local all_bp = 0
+    local GC_score = {G = 1, C = 1, A = 0, T = 0,
+        N = 0, ['-'] = 0}
+    local ALL_score = {G = 1, C = 1, A = 1, T = 1,
+        N = 0, ['-'] = 0}
+    for i = 1, seqs_n do
+        f:write(pf('>test%i\n', i))
+        local lines_n = rr(1, 10)
+        for j = 1, lines_n do
+            for k = 1, 60 do
+                local letter = one_of('A', 'T', 'G', 'C',
+                    '-', 'N')
+                f:write(letter)
+                if i == 1 then
+                    gc = gc + GC_score[letter]
+                    all_bp = all_bp + ALL_score[letter]
+                end
+            end
+            f:write('\n')
+        end
+    end
+    f:close('\n')
+    local gc_perc = math.floor(gc / all_bp * 100 + 0.5)
+    return read_file('input.fasta'), match_numbers(gc_perc)
+end}},
 
 }
 
