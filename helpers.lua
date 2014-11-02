@@ -177,5 +177,13 @@ helpers.one_of = function(...)
     return t[math.random(1, #t)]
 end
 
+helpers.copy_list = function(ll)
+    local ll2 = {}
+    for _, e in ipairs(ll) do
+        table.insert(ll2, e)
+    end
+    return ll2
+end
+
 return helpers
 
