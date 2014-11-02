@@ -411,6 +411,21 @@ function()
     return read_file('input.fasta'), match_numbers(gc_perc)
 end}},
 
+{'articles', {
+function()
+    local jorn_start = rr(1900, 2000)
+    local doc_start = rr(1900, 2000)
+    local doc_stop = doc_start + rr(0, 50)
+    local result = 0
+    for i = doc_start, doc_stop, 2 do
+        if i > jorn_start and i < doc_stop then
+            result = result + 1
+        end
+    end
+    return pf('%i\n%i\n%i', jorn_start, doc_start, doc_stop),
+        match_numbers(result)
+end}},
+
 }
 
 return pr9
