@@ -124,6 +124,24 @@ helpers.match_str = function(result)
     end
 end
 
+helpers.match_choice = function(result, choices)
+    return function(out)
+        if not out:match(result) then
+            return false,
+                'выход не содержит правильный ответ ' ..
+                result
+        end
+        for _, choice in ipairs(choices) do
+            if choice ~= result and out:match(choice) then
+                return false,
+                    'выход содержит неправильный ответ ' ..
+                    choice
+            end
+        end
+        return true
+    end
+end
+
 helpers.find_strs = function(out, nn, order)
     if order == nil then
         order = true
