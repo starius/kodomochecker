@@ -124,6 +124,45 @@ helpers.match_str = function(result)
     end
 end
 
+helpers.find_strs = function(out, nn, order)
+    if order == nil then
+        order = true
+    end
+    local nn_str = table.concat(nn, ', ')
+    local start = 1
+    for i, word in ipairs(nn) do
+        if not order then
+            start = 1
+        end
+        local a, b = out:find(word, start, true)
+        if not a then
+            return false, string.format([[
+Выход не содержит фразы %s.
+Мы ожидали увидеть в выходе такие фразы: %s]],
+word, nn_str)
+        end
+        start = a
+    end
+    return true
+end
+
+assert(helpers.find_strs('1 1.2\n3.67', {'1', '1.2', '3.67'}))
+assert(not helpers.find_strs('1 1.1', {'1', '1.2'}))
+
+helpers.match_strs = function(...)
+    local nn = {...}
+    return function(out)
+        return helpers.find_strs(out, nn, true)
+    end
+end
+
+helpers.match_strs_no_order = function(...)
+    local nn = {...}
+    return function(out)
+        return helpers.find_strs(out, nn, false)
+    end
+end
+
 if _VERSION == 'Lua 5.2' then
     helpers.execute = os.execute
 elseif _VERSION == 'Lua 5.1' then
