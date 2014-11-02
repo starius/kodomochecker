@@ -1,7 +1,7 @@
 
 local kurs1 = {}
 
-kurs1.excel_list = {
+kurs1.group1 = {
 'akmarina',
 'dbadmaev',
 'polina_bai',
@@ -26,6 +26,9 @@ kurs1.excel_list = {
 'crescent8547',
 'sstarikov',
 'tana_shir',
+}
+
+kurs1.group2 = {
 'ivan',
 'batyrsha',
 'pvolk96',
@@ -50,6 +53,14 @@ kurs1.excel_list = {
 'talianash',
 'a_lex'
 }
+
+kurs1.excel_list = {}
+for _, stud in ipairs(kurs1.group1) do
+    table.insert(kurs1.excel_list, stud)
+end
+for _, stud in ipairs(kurs1.group2) do
+    table.insert(kurs1.excel_list, stud)
+end
 
 return kurs1
 
