@@ -83,6 +83,26 @@ local err = [[Ой, ошибка!
 ===========================
 ]]
 
+checkone.checkfile = function(py, task)
+    for fi, func in ipairs(task) do
+        local ok, m1, m2, task_in, task_out =
+            checkpy(func, py)
+        if ok then
+            local p8 = checkone.pep8(py)
+            local p8st, p8rep = unPack(p8)
+            return true, p8rep, p8st
+        else
+            local m = m1
+            if m2 ~= 'none' then
+                m = m .. '\nРазъяснение: ' .. m2
+            end
+            local report =
+                pf(err, m, task_in, task_out)
+            return false, report, fi
+        end
+    end
+end
+
 checkone.checkone = function(prac, stud, mnem0, set_result)
     for _, mnem_and_task in ipairs(prac) do
         local mnem, task = unPack(mnem_and_task)
@@ -92,25 +112,9 @@ checkone.checkone = function(prac, stud, mnem0, set_result)
                 set_result(stud, mnem, py, false,
                     'No Python file found!', 'nopy')
             else
-                for fi, func in ipairs(task) do
-                    local ok, m1, m2, task_in, task_out =
-                        checkpy(func, py)
-                    if ok then
-                        local p8 = checkone.pep8(py)
-                        local p8st, p8rep = unPack(p8)
-                        set_result(stud, mnem, py, true,
-                            p8rep, p8st)
-                    else
-                        local m = m1
-                        if m2 ~= 'none' then
-                            m = m .. '\nРазъяснение: ' .. m2
-                        end
-                        local report =
-                            pf(err, m, task_in, task_out)
-                        set_result(stud, mnem, py, false,
-                            report, fi)
-                    end
-                end
+                local status, report, fi =
+                    checkone.checkfile(py, task)
+                set_result(stud, mnem, py, status, report, fi)
             end
         end
     end
@@ -118,19 +122,42 @@ end
 
 -- http://stackoverflow.com/a/4521960
 if not pcall(debug.getlocal, 4, 1) then
-    local pr_name, stud, mnem = unPack(arg)
-    local prac = require(pr_name)
+    local py = arg[1]
+    local py_pattern = '(%w+)_(%w+)_(%w+).py$'
+    local stud, pr_name, mnem0 = py:match(py_pattern)
+    local prac = assert(require(pr_name))
+    local task0
+    for _, mnem_and_task in ipairs(prac) do
+        local mnem, task = unPack(mnem_and_task)
+        if mnem == mnem0 then
+            task0 = task
+        end
+    end
+    local ok = true
+    local text = ''
+    local pep8ok = true
+    local pep8text = ''
     for i = 1, 100 do
-        checkone.checkone(prac, stud, mnem, function(...)
-            local s, m, py, status, report, fi = ...
-            if not status then
-                print(...)
-            end
-            if status and i == 1 and not fi then
-                -- pep8
-                print(...)
-            end
-        end)
+        local status, report, fi = checkone.checkfile(py, task0)
+        if not status then
+            ok = false
+            text = text .. '\n' .. report .. '\n'
+        end
+        local p8st = fi
+        local p8rep = report
+        if not p8st then
+            pep8text = 'Скрипт работает, но есть нарекания ' ..
+            'к оформлению кода (см. ниже по-английски):' ..
+            '\n\n' .. report
+            pep8ok = false
+        end
+    end
+    if ok and pep8ok then
+        print([[Оценка 1.5, превосходно!]])
+    elseif ok and not pep8ok then
+        print('Оценка 1\n\n' .. pep8text)
+    else
+        print('Оценка 0\n\n' .. text)
     end
 end
 
