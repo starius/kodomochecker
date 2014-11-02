@@ -212,6 +212,50 @@ end,
 
 }},
 
+{'cubes', {
+
+function()
+    local a = rr(1, 5)
+    local b = rr(1, 5)
+    local c = rr(1, 5)
+    local colored = function(i, j, k)
+        local result = 0
+        local add_if = function(cond)
+            if cond then
+                result = result + 1
+            end
+        end
+        add_if(i == 1)
+        add_if(i == a)
+        add_if(j == 1)
+        add_if(j == b)
+        add_if(k == 1)
+        add_if(k == c)
+        return result
+    end
+    local tt = {}
+    for i = 1, a do
+        for j = 1, b do
+            for k = 1, c do
+                local cc = colored(i, j, k)
+                if tt[cc] == nil then
+                    tt[cc] = 0
+                end
+                tt[cc] = tt[cc] + 1
+            end
+        end
+    end
+    local expected = {}
+    for cc = 0, 6 do
+        if tt[cc] ~= nil then
+            table.insert(expected, cc)
+            table.insert(expected, tt[cc])
+        end
+    end
+    local task = pf('%i\n%i\n%i', a, b, c)
+    return task, match_numbers(unPack(expected))
+end}},
+
 }
 
 return pr9
