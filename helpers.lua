@@ -203,5 +203,13 @@ helpers.copy_list = function(ll)
     return ll2
 end
 
+helpers.shuffle = function(t)
+    local t2 = {}
+    while #t > 0 do
+        table.insert(t2, table.remove(t, math.random(1, #t)))
+    end
+    return t2
+end
+
 return helpers
 
