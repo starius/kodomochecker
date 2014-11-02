@@ -211,5 +211,12 @@ helpers.shuffle = function(t)
     return t2
 end
 
+helpers.read_file = function(fname)
+    local f = io.open(fname)
+    local t = f:read('*a')
+    f:close()
+    return t
+end
+
 return helpers
 
