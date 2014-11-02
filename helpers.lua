@@ -105,6 +105,14 @@ helpers.match_numbers_no_order = function(...)
     end
 end
 
+helpers.bool_wrapper = function(f)
+    return function(out)
+        out = out:gsub('[Tt]rue', 1)
+        out = out:gsub('[Ff]alse', 0)
+        return f(out)
+    end
+end
+
 helpers.match_str = function(result)
     return function(out)
         if not out:match(result) then
