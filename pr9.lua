@@ -19,6 +19,8 @@ local one_of = require('helpers').one_of
 local unPack = require('helpers').unPack
 local copy_list = require('helpers').copy_list
 
+local kurs1 = require('kurs1')
+
 local pr9 = {
 
 {'nucleobase', {
@@ -122,6 +124,18 @@ function()
     end
     local ll_str = table.concat(ll, ', ')
     return ll_str, match_strs(unPack(ll2))
+end}},
+
+{'kurs1', {
+function()
+    local group = rr(1, 2)
+    if group == 1 then
+        return one_of(unPack(kurs1.group1)),
+            match_numbers(101)
+    else
+        return one_of(unPack(kurs1.group2)),
+            match_numbers(102)
+    end
 end}},
 
 }
