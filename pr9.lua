@@ -26,8 +26,14 @@ local kurs1 = require('kurs1')
 local tr_abc = function(a, b, c)
     local abc = {a, b, c}
     abc = shuffle(abc)
-    abc = unPack(abc)
+    a, b, c = unPack(abc)
     return pf('%f\n%f\n%f', a, b, c)
+end
+
+local tr_xyz = function(...)
+    local abc = {...}
+    ax,ay,bx,by,cx,cy = unPack(abc)
+    return pf('%f %f\n%f %f\n%f %f', ax,ay,bx,by,cx,cy)
 end
 
 local tr_choices = {'degenerate', 'right', 'acute', 'obtuse'}
@@ -308,6 +314,69 @@ function()
     local task = pf('%i\n%i\n%i', 1, 1, 1)
     return task, match_numbers(5, 1)
 end,
+}},
+
+{'triangle2', {
+function()
+    local ax = rr(1, 20)
+    local ay = rr(1, 20)
+    local bx = rr(1, 20)
+    local by = rr(1, 20)
+    local diffx = bx - ax
+    local diffy = by - ay
+    local f = rr(1, 5)
+    local cx = bx + f * diffx
+    local cy = by + f * diffy
+    return tr_xyz(ax,ay,bx,by,cx,cy),
+        match_choice('degenerate', tr_choices)
+end,
+
+function()
+    local ax = rr(1, 20)
+    local ay = rr(1, 20)
+    local bx = rr(1, 20)
+    local by = rr(1, 20)
+    local diffx = bx - ax
+    local diffy = by - ay
+    local f = rr(1, 5)
+    local cx = bx + f * diffy
+    local cy = by - f * diffx
+    return tr_xyz(ax,ay,bx,by,cx,cy),
+        match_choice('right', tr_choices)
+end,
+
+function()
+    local ax = rr(1, 20)
+    local ay = rr(1, 20)
+    local bx = rr(1, 20)
+    local by = rr(1, 20)
+    local midx = (bx + ax) / 2
+    local midy = (by + ay) / 2
+    local diffx = bx - ax
+    local diffy = by - ay
+    local f = rr(5, 10)
+    local cx = midx + f * diffy
+    local cy = midy - f * diffx
+    return tr_xyz(ax,ay,bx,by,cx,cy),
+        match_choice('acute', tr_choices)
+end,
+
+function()
+    local ax = rr(1, 20)
+    local ay = rr(1, 20)
+    local bx = rr(1, 20)
+    local by = rr(1, 20)
+    local midx = (bx + ax) / 2
+    local midy = (by + ay) / 2
+    local diffx = bx - ax
+    local diffy = by - ay
+    local f = rr(5, 10) / 100
+    local cx = midx + f * diffy
+    local cy = midy - f * diffx
+    return tr_xyz(ax,ay,bx,by,cx,cy),
+        match_choice('obtuse', tr_choices)
+end,
+
 }},
 
 }
