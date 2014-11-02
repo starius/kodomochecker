@@ -106,5 +106,10 @@ elseif _VERSION == 'Lua 5.1' then
     end
 end
 
+helpers.one_of = function(...)
+    local t = {...}
+    return t[math.random(1, #t)]
+end
+
 return helpers
 
