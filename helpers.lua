@@ -1,14 +1,15 @@
 
 local helpers = {}
 
+helpers.unPack = unpack or table.unpack
+
 helpers.shortrand = function()
     local t = {}
     local l = math.random(3, 7)
     for i = 1, l do
         table.insert(t, math.random(65, 90)) -- A-Z
     end
-    local unPack = unpack or table.unpack
-    return string.char(unPack(t))
+    return string.char(helpers.unPack(t))
 end
 
 helpers.genname = function()
@@ -48,9 +49,16 @@ helpers.match_number = function(result)
     end
 end
 
-helpers.find_numbers = function(out, nn)
-    local nn_str = table.concat(nn, ', ')
+helpers.find_numbers = function(out, nn, order)
+    if order == nil then
+        order = true
+    end
     local numbers = helpers.all_numbers(out)
+    if not order then
+        table.sort(nn)
+        table.sort(numbers)
+    end
+    local nn_str = table.concat(nn, ', ')
     local numbers_str = table.concat(numbers, ', ')
     if #nn ~= #numbers then
         return false, string.format([[
@@ -79,10 +87,21 @@ assert(helpers.find_numbers('1 1.2\n3.67', {1, 1.2, 3.67}))
 assert(not helpers.find_numbers('1 1.2\n3.67', {1, 1.2}))
 assert(not helpers.find_numbers('1 1.1', {1, 1.2}))
 
+assert(helpers.find_numbers('1 2 1.1', {1.1, 1, 2}, false))
+assert(not helpers.find_numbers('1 2 1.1', {1.1, 1, 2}, true))
+assert(not helpers.find_numbers('1 2 1.9', {1.1, 1, 2}, false))
+
 helpers.match_numbers = function(...)
     local nn = {...}
     return function(out)
-        return helpers.find_numbers(out, nn)
+        return helpers.find_numbers(out, nn, true)
+    end
+end
+
+helpers.match_numbers_no_order = function(...)
+    local nn = {...}
+    return function(out)
+        return helpers.find_numbers(out, nn, false)
     end
 end
 
