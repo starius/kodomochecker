@@ -439,6 +439,43 @@ function()
 end,
 }},
 
+{'median', {
+function()
+    -- odd
+    local ll_size = 1 + 2 * rr(0, 10)
+    local last = 0
+    local ll = {}
+    for i = 1, ll_size do
+        local v = last + rr(0, 2)
+        table.insert(ll, v)
+        last = v
+    end
+    local middle = (ll_size + 1) / 2
+    local result = ll[middle]
+    ll = shuffle(ll)
+    local input = table.concat(ll, '\n')
+    return input, match_number(result)
+end,
+
+function()
+    -- even
+    local ll_size = 2 * rr(1, 10)
+    local last = 0
+    local ll = {}
+    for i = 1, ll_size do
+        local v = last + rr(0, 2)
+        table.insert(ll, v)
+        last = v
+    end
+    local middle1 = ll_size / 2
+    local middle2 = middle1 + 1
+    local result = (ll[middle1] + ll[middle2]) / 2
+    ll = shuffle(ll)
+    local input = table.concat(ll, '\n')
+    return input, match_number(result)
+end,
+}},
+
 }
 
 return pr9
