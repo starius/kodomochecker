@@ -59,7 +59,8 @@ checkone.find_py = function(stud, mnem)
     end
     mnem = mnem:gsub('%-', '%%%-')
     for _, py in ipairs(checkone.all_files) do
-        if py:match(stud) and py:match(mnem .. '.py') then
+        if py:match(stud) and
+                py:match('_' .. mnem .. '.py') then
             return py
         end
     end
