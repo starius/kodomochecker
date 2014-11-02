@@ -11,6 +11,7 @@ local rr = math.random
 local genname = require('helpers').genname
 local find_number = require('helpers').find_number
 local match_number = require('helpers').match_number
+local match_numbers = require('helpers').match_numbers
 
 local pr8 = {
 
@@ -109,15 +110,7 @@ function()
     local c = rr(-1000, 1000) / 100
     local x = -b/2
     local y = x^2 + b * x + c
-    return b .. '\n' .. c, function(out)
-        if find_number(out, x) and find_number(out, y) then
-            return true
-        else
-            return false, pf([[выдача вашей программы
-                не содержит верных чисел
-                %s и %s]], x, y)
-        end
-    end
+    return b .. '\n' .. c, match_numbers(x, y)
 end
 }},
 
@@ -128,19 +121,7 @@ function()
     local kcl = math.min(hcl, koh)
     local hcl2 = hcl - kcl
     local koh2 = koh - kcl
-    return hcl .. '\n' .. koh, function(out)
-        if not find_number(out, kcl) then
-            return false, pf([[выдача вашей программы
-                не содержит верного количества KCl ]] .. kcl)
-        elseif not find_number(out, hcl2) then
-            return false, pf([[выдача вашей программы
-                не содержит верного количества HCl ]] .. hcl2)
-        elseif not find_number(out, koh2) then
-            return false, pf([[выдача вашей программы
-                не содержит верного количества KOH ]] .. koh2)
-        end
-        return true
-    end
+    return hcl .. '\n' .. koh, match_numbers(hcl2, koh2, kcl)
 end
 }},
 
@@ -149,20 +130,12 @@ function()
     local a = rr(1, 20)
     local b = rr(0, 99)
     local n = rr(0, 10)
-    return a .. '\n' .. b .. '\n' .. n, function(out)
-        local pie_kop = a * 100 + b
-        local all = pie_kop * n
-        local rub = math.floor(all / 100)
-        local kop = all % 100
-        if not find_number(out, rub) then
-            return false, pf([[выдача вашей программы
-                не содержит верного количества рублей ]] .. rub)
-        elseif not find_number(out, kop) then
-            return false, pf([[выдача вашей программы
-                не содержит верного количества копеек ]] .. kop)
-        end
-        return true
-    end
+    local pie_kop = a * 100 + b
+    local all = pie_kop * n
+    local rub = math.floor(all / 100)
+    local kop = all % 100
+    return a .. '\n' .. b .. '\n' .. n,
+        match_numbers(rub, kop)
 end
 }},
 
