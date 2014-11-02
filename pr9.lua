@@ -5,6 +5,7 @@ local pf = string.format
 math.randomseed(os.time())
 
 local shortrand = require('helpers').shortrand
+local shuffle = require('helpers').shuffle
 local rr = math.random
 local genname = require('helpers').genname
 local find_number = require('helpers').find_number
@@ -14,12 +15,22 @@ local match_numbers_no_order =
     require('helpers').match_numbers_no_order
 local match_str = require('helpers').match_str
 local match_strs = require('helpers').match_strs
+local match_choice = require('helpers').match_choice
 local bool_wrapper = require('helpers').bool_wrapper
 local one_of = require('helpers').one_of
 local unPack = require('helpers').unPack
 local copy_list = require('helpers').copy_list
 
 local kurs1 = require('kurs1')
+
+local tr_abc = function(a, b, c)
+    local abc = {a, b, c}
+    abc = shuffle(abc)
+    abc = unPack(abc)
+    return pf('%f\n%f\n%f', a, b, c)
+end
+
+local tr_choices = {'degenerate', 'right', 'acute', 'obtuse'}
 
 local pr9 = {
 
@@ -137,6 +148,49 @@ function()
             match_numbers(102)
     end
 end}},
+
+{'triangle', {
+
+function()
+    local a = rr(1, 20)
+    local b = rr(1, 20)
+    local c = a + b
+    return tr_abc(a, b, c),
+        match_choice('degenerate', tr_choices)
+end,
+
+function()
+    -- https://en.wikipedia.org/wiki/Pythagorean_triple#Generating_a_triple
+    local n = rr(1, 1000)
+    local m = n + rr(1, 1000)
+    local a = m^2 - n^2
+    local b = 2 * m * n
+    local c = m^2 + n^2
+    return tr_abc(a, b, c),
+        match_choice('right', tr_choices)
+end,
+
+function()
+    local a = rr(1, 100)
+    local b = rr(1, 100)
+    local hyp = (a^2 + b^2) ^ 0.5
+    local a_plus_b = a + b
+    local c = (a_plus_b + hyp) / 2
+    return tr_abc(a, b, c),
+        match_choice('obtuse', tr_choices)
+end,
+
+function()
+    local a = rr(1, 100)
+    local b = rr(1, 100)
+    local hyp = (a^2 + b^2) ^ 0.5
+    local a_max_b = math.max(a, b)
+    local c = (a_max_b + hyp) / 2
+    return tr_abc(a, b, c),
+        match_choice('acute', tr_choices)
+end,
+
+}},
 
 }
 
