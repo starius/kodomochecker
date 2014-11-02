@@ -426,6 +426,19 @@ function()
         match_numbers(result)
 end}},
 
+{'sqrt', {
+function()
+    local result = rr(1, 50)
+    local input = result ^ 2
+    return pf('%i', input), match_number(result)
+end,
+
+function()
+    local input = rr(-100, -5)
+    return pf('%i', input), match_str('Error')
+end,
+}},
+
 }
 
 return pr9
