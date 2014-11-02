@@ -192,6 +192,26 @@ end,
 
 }},
 
+
+{'prime', {
+
+function()
+    local prime = one_of(unPack(require('primes')))
+    return tostring(prime), match_choice('YES', {'YES', 'NO'})
+end,
+
+function()
+    local a = one_of(unPack(require('primes')))
+    local b = one_of(unPack(require('primes')))
+    return tostring(a * b), match_choice('NO', {'YES', 'NO'})
+end,
+
+function()
+    return '1', match_choice('NO', {'YES', 'NO'})
+end,
+
+}},
+
 }
 
 return pr9
