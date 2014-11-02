@@ -15,11 +15,16 @@ helpers.genname = function()
     return helpers.shortrand() .. helpers.shortrand():lower()
 end
 
-helpers.find_number = function(t, n)
+helpers.all_numbers = function(t)
     local numbers = {}
     for w in string.gmatch(t, "%-?%d+%.?%d*") do
         table.insert(numbers, tonumber(w))
     end
+    return numbers
+end
+
+helpers.find_number = function(t, n)
+    local numbers = helpers.all_numbers(t)
     for _, n1 in ipairs(numbers) do
         if math.abs(n - n1) < 0.001 then
             return true
@@ -38,6 +43,55 @@ helpers.match_number = function(result)
     return function(out)
         if not helpers.find_number(out, result) then
             return false, 'выход не содержит правильный ответ ' .. result
+        end
+        return true
+    end
+end
+
+helpers.find_numbers = function(out, nn)
+    local nn_str = table.concat(nn, ', ')
+    local numbers = helpers.all_numbers(out)
+    local numbers_str = table.concat(numbers, ', ')
+    if #nn ~= #numbers then
+        return false, string.format([[
+Выход содержит неправильное количество чисел.
+Мы ожидали %i чисел: %s
+В выходе вашей программы мы нашли %i чисел: %s]],
+#nn, nn_str,
+#numbers, numbers_str)
+    end
+    THRESHOLD = 0.001
+    for i = 1, #nn do
+        if math.abs(nn[i] - numbers[i]) > THRESHOLD then
+            return false, string.format([[
+Выход содержит неправильное число.
+Мы ожидали числа: %s
+В выходе вашей программы мы нашли числа: %s
+Число с номером %i отличается. У нас %f, а у вас %f]],
+nn_str,
+numbers_str, i, nn[i], numbers[i])
+        end
+    end
+    return true
+end
+
+assert(helpers.find_numbers('1 1.2\n3.67', {1, 1.2, 3.67}))
+assert(not helpers.find_numbers('1 1.2\n3.67', {1, 1.2}))
+assert(not helpers.find_numbers('1 1.1', {1, 1.2}))
+
+helpers.match_numbers = function(...)
+    local nn = {...}
+    return function(out)
+        return helpers.find_numbers(out, nn)
+    end
+end
+
+helpers.match_str = function(result)
+    return function(out)
+        if not out:match(result) then
+            return false,
+                'выход не содержит правильный ответ ' ..
+                result
         end
         return true
     end
