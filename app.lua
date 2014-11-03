@@ -21,7 +21,9 @@ app:post("send", "/send", function(self)
     r = io.popen('luajit checkone.lua ' .. fname, 'r')
     local result = r:read('*a')
     r:close()
-    return '<pre>' .. result .. '</pre>'
+    return '<button onclick="window.history.back()">' ..
+    'Go back</button>' ..
+    '<pre>' .. result .. '</pre>'
 end)
 
 return app
