@@ -178,7 +178,7 @@ if not pcall(debug.getlocal, 4, 1) then
     elseif ok and not pep8ok then
         print('Оценка 3\n\n' .. pep8text)
     else
-        print('Оценка 0\n\n' .. text)
+        print('Оценка 1\n\n' .. text)
     end
 end
 
