@@ -66,11 +66,9 @@ checkall.all_mnems = function(pr)
     return mnems
 end
 
-checkall.N = 30
-
-checkall.checkall = function(prac)
+checkall.checkall = function(prac, N)
     local mnems = checkall.all_mnems(prac)
-    for i = 1, checkall.N do
+    for i = 1, N do
         io.stderr:write('Iteration ' .. i .. '\n')
         for _, stud in ipairs(excel_list) do
             for _, mnem in ipairs(mnems) do
@@ -112,8 +110,10 @@ end
 -- http://stackoverflow.com/a/4521960
 if not pcall(debug.getlocal, 4, 1) then
     local pr_name = arg[1]
+    local N = arg[2] or 30
+    N = tonumber(N)
     local prac = require(pr_name)
-    checkall.checkall(prac)
+    checkall.checkall(prac, N)
     checkall.print_results(prac)
 end
 
