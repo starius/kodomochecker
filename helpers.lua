@@ -49,6 +49,15 @@ helpers.match_number = function(result)
     end
 end
 
+THRESHOLD = 0.001
+local arr_find_num = function(arr, num, start)
+    for i = start, #arr do
+        if math.abs(arr[i] - num) <= THRESHOLD then
+            return i
+        end
+    end
+end
+
 helpers.find_numbers = function(out, nn, order)
     if order == nil then
         order = true
@@ -60,31 +69,33 @@ helpers.find_numbers = function(out, nn, order)
     end
     local nn_str = table.concat(nn, ', ')
     local numbers_str = table.concat(numbers, ', ')
-    if #nn ~= #numbers then
+    if #numbers < #nn then
         return false, string.format([[
-Выход содержит неправильное количество чисел.
+Выход содержит недостаточное количество чисел.
 Мы ожидали %i чисел: %s
 В выходе вашей программы мы нашли %i чисел: %s]],
 #nn, nn_str,
 #numbers, numbers_str)
     end
-    THRESHOLD = 0.001
+    local start = 1
     for i = 1, #nn do
-        if math.abs(nn[i] - numbers[i]) > THRESHOLD then
+        local hit = arr_find_num(numbers, nn[i], start)
+        if not hit then
             return false, string.format([[
-Выход содержит неправильное число.
+Выход не содержит правильное число.
 Мы ожидали числа: %s
 В выходе вашей программы мы нашли числа: %s
-Число с номером %i отличается. У нас %f, а у вас %f]],
-nn_str,
-numbers_str, i, nn[i], numbers[i])
+Не могу найти число %f в выходе]],
+nn_str, numbers_str, nn[i])
         end
+        start = hit + 1
     end
     return true
 end
 
 assert(helpers.find_numbers('1 1.2\n3.67', {1, 1.2, 3.67}))
-assert(not helpers.find_numbers('1 1.2\n3.67', {1, 1.2}))
+assert(helpers.find_numbers('1 1.2\n3.67', {1, 1.2}))
+assert(helpers.find_numbers('1 4 1.2\n3.67', {1, 1.2}))
 assert(not helpers.find_numbers('1 1.1', {1, 1.2}))
 
 assert(helpers.find_numbers('1 2 1.1', {1.1, 1, 2}, false))
