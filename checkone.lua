@@ -123,8 +123,17 @@ end
 -- http://stackoverflow.com/a/4521960
 if not pcall(debug.getlocal, 4, 1) then
     local py = arg[1]
+    if not py then
+        error('No Python script provided')
+    end
     local py_pattern = '(%w+)_(%w+)_(%w+).py$'
     local stud, pr_name, mnem0 = py:match(py_pattern)
+    if not py then
+        error('Wrong script name. Format: student_prac_task.py')
+    end
+    if pr_name ~= 'pr8' and pr_name ~= 'pr9' then
+        error('Unknown prac name')
+    end
     local prac = assert(require(pr_name))
     local task0
     for _, mnem_and_task in ipairs(prac) do
@@ -132,6 +141,9 @@ if not pcall(debug.getlocal, 4, 1) then
         if mnem == mnem0 then
             task0 = task
         end
+    end
+    if not task0 then
+        error('Unknown task name')
     end
     local ok = true
     local text = ''
