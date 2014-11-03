@@ -382,6 +382,7 @@ end,
 
 {'gc', {
 function()
+    os.execute('rm input.fasta')
     local f = io.open('input.fasta', 'w')
     local seqs_n = rr(1, 3)
     local gc = 0
