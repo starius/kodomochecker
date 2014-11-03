@@ -28,9 +28,13 @@ local add_to_report = function(stud, mnem, fi, py, report)
 end
 
 local pep8ok = {}
+local nopy = {}
 
 checkall.set_result = function(stud, mnem, py, ok, report, fi)
     local key = stud .. '|' .. mnem
+    if fi == 'nopy' then
+        nopy[key] = true
+    end
     if excel[key] ~= false then
         excel[key] = ok
         local p8st = fi
@@ -88,8 +92,11 @@ checkall.print_results = function(prac)
         local line = stud
         for _, mnem_and_task in ipairs(prac) do
             local mnem, task = unPack(mnem_and_task)
-            local score = 0
             local key = stud .. '|' .. mnem
+            local score = 0
+            if not nopy[key] then
+                score = 1
+            end
             if excel[key] == true then
                 score = 3
                 if pep8ok[key] == true then
