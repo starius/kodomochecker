@@ -91,9 +91,9 @@ checkall.print_results = function(prac)
             local score = 0
             local key = stud .. '|' .. mnem
             if excel[key] == true then
-                score = 1
+                score = 3
                 if pep8ok[key] == true then
-                    score = 1.5
+                    score = 5
                 end
             end
             line = line .. '\t' .. score

@@ -165,9 +165,9 @@ if not pcall(debug.getlocal, 4, 1) then
         end
     end
     if ok and pep8ok then
-        print([[Оценка 1.5, превосходно!]])
+        print([[Оценка 5, превосходно!]])
     elseif ok and not pep8ok then
-        print('Оценка 1\n\n' .. pep8text)
+        print('Оценка 3\n\n' .. pep8text)
     else
         print('Оценка 0\n\n' .. text)
     end
