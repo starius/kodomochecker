@@ -153,7 +153,12 @@ if not pcall(debug.getlocal, 4, 1) then
     local text = ''
     local pep8ok = true
     local pep8text = ''
+    local test_started = os.time()
     for i = 1, 100 do
+        if os.difftime(os.time(), test_started) > 15 then
+            -- test takes more than 15 seconds
+            break
+        end
         local status, report, fi = checkone.checkfile(py, task0)
         if not status then
             ok = false
