@@ -127,7 +127,7 @@ if not pcall(debug.getlocal, 4, 1) then
         print('No Python script provided')
         error()
     end
-    local py_pattern = '(%w+)_(%w+)_(%w+).py$'
+    local py_pattern = '([%w-]+)_(%w+)_([%w-]+).py$'
     local stud, pr_name, mnem0 = py:match(py_pattern)
     if not py then
         print('Wrong script name. Format: student_prac_task.py')
