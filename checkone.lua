@@ -21,7 +21,13 @@ checkone.pep8 = function(py)
         local pep8out = io.open(pep8out_fname, 'r')
         local pep8_report = pep8out:read('*a')
         pep8out:close()
-        checkone.pep8res[py] = {run_ok, pep8_report}
+        local pep_ok = 0
+        if run_ok then
+            pep_ok = 2
+        elseif not pep8_report:find('%d: E%d') then
+            pep_ok = 1
+        end
+        checkone.pep8res[py] = {pep_ok, pep8_report}
     end
     return checkone.pep8res[py]
 end
@@ -151,7 +157,7 @@ if not pcall(debug.getlocal, 4, 1) then
     end
     local ok = true
     local text = ''
-    local pep8ok = true
+    local pep8ok = 2
     local pep8text = ''
     local test_started = os.time()
     for i = 1, 100 do
@@ -166,16 +172,23 @@ if not pcall(debug.getlocal, 4, 1) then
         end
         local p8st = fi
         local p8rep = report
-        if not p8st then
-            pep8text = 'Скрипт работает, но есть нарекания ' ..
+        pep8ok = math.min(pep8ok, p8st)
+        if p8st == 0 then
+            pep8text = 'Скрипт работает, но есть серьёзные нарекания ' ..
             'к оформлению кода (см. ниже по-английски):' ..
             '\n\n' .. report
-            pep8ok = false
+        end
+        if p8st == 1 then
+            pep8text = 'Скрипт работает, но есть кое-какие нарекания ' ..
+            'к оформлению кода (см. ниже по-английски):' ..
+            '\n\n' .. report
         end
     end
-    if ok and pep8ok then
+    if ok and pep8ok == 2 then
         print([[Оценка 5, превосходно!]])
-    elseif ok and not pep8ok then
+    elseif ok and pep8ok == 1 then
+        print('Оценка 4\n\n' .. pep8text)
+    elseif ok and pep8ok == 0 then
         print('Оценка 3\n\n' .. pep8text)
     else
         print('Оценка 1\n\n' .. text)

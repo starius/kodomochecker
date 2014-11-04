@@ -39,13 +39,18 @@ checkall.set_result = function(stud, mnem, py, ok, report, fi)
         excel[key] = ok
         local p8st = fi
         local p8rep = report
-        if not p8st then
-            report = 'Скрипт работает, но есть нарекания ' ..
+        pep8ok[key] = p8st
+        if p8st == 0 then
+            report = 'Скрипт работает, но есть серьёзные нарекания ' ..
             'к оформлению кода (см. ниже по-английски):' ..
             '\n\n' .. report
             add_to_report(stud, mnem, 'pep8', py, report)
-        else
-            pep8ok[key] = true
+        end
+        if p8st == 1 then
+            report = 'Скрипт работает, но есть кое-какие нарекания ' ..
+            'к оформлению кода (см. ниже по-английски):' ..
+            '\n\n' .. report
+            add_to_report(stud, mnem, 'pep8', py, report)
         end
     end
     if not ok then
@@ -96,10 +101,7 @@ checkall.print_results = function(prac)
                 score = 1
             end
             if excel[key] == true then
-                score = 3
-                if pep8ok[key] == true then
-                    score = 5
-                end
+                score = 3 + pep8ok[key]
             end
             line = line .. '\t' .. score
         end
