@@ -112,6 +112,10 @@ if not pcall(debug.getlocal, 4, 1) then
     local pr_name = arg[1]
     local N = arg[2] or 30
     N = tonumber(N)
+    local stud = arg[3]
+    if stud then
+        excel_list = {stud}
+    end
     local prac = require(pr_name)
     checkall.checkall(prac, N)
     checkall.print_results(prac)
