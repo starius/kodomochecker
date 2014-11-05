@@ -534,5 +534,41 @@ end
 
 table.insert(pr9, {'all-lunch2', get_tests(pr9, 'all-lunch')})
 
+local prime2vars = {'float', 'negative', '0', '1', 'prime',
+    'composite'}
+
+add_test(pr9, 'prime2', function()
+    local prime = one_of(unPack(require('primes')))
+    return tostring(prime),
+        match_choice('prime', prime2vars)
+end)
+
+add_test(pr9, 'prime2', function()
+    local a = one_of(unPack(require('primes')))
+    local b = one_of(unPack(require('primes')))
+    return tostring(a * b),
+        match_choice('composite', prime2vars)
+end)
+
+add_test(pr9, 'prime2', function()
+    local v = rr(-10, -5)
+    return tostring(v),
+        match_choice('negative', prime2vars)
+end)
+
+add_test(pr9, 'prime2', function()
+    local v = rr(1, 100) + 0.5
+    return tostring(v),
+        match_choice('float', prime2vars)
+end)
+
+add_test(pr9, 'prime2', function()
+    return '0', match_choice('0', prime2vars)
+end)
+
+add_test(pr9, 'prime2', function()
+    return '1', match_choice('1', prime2vars)
+end)
+
 return pr9
 
