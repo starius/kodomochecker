@@ -528,7 +528,7 @@ local aas = require('aminoacid').aas
 local aa2props = require('aminoacid').aa2props
 for _, aa in ipairs(aas) do
     add_test(pr9, 'aminoacid', function()
-        return aa, match_strs(aas.aa2props[aa])
+        return aa, match_strs(unPack(aa2props[aa]))
     end)
 end
 
