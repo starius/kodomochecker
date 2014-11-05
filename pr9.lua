@@ -574,5 +574,44 @@ table.insert(pr9, {'triangle3', get_tests(pr9, 'triangle2')})
 
 table.insert(pr9, {'articles2', get_tests(pr9, 'articles')})
 
+local lunch_break = {
+    [1] = '10:35-11:05',
+    [2] = '12:30-13:00',
+    [3] = '14:20-14:50',
+    [4] = '17:10-17:40',
+    [5] = '18:55-19:25',
+}
+
+local roman = {
+    [1] = 'I',
+    [2] = 'II',
+    [3] = 'III',
+    [4] = 'IV',
+    [5] = 'V',
+}
+
+for p = 1, 5 do
+    local last = p
+    add_test(pr9, 'lunch-break', function()
+        local first = rr(1, p)
+        return first .. '\n' .. last,
+            match_str(lunch_break[last])
+    end)
+    add_test(pr9, 'lunch-break-roman', function()
+        local first = rr(1, p)
+        return roman[first] .. '\n' .. roman[last],
+            match_str(lunch_break[last])
+    end)
+end
+
+add_test(pr9, 'lunch-break', function()
+    return rr(1, 3) .. '\n' .. rr(4, 5),
+        match_str('14:20-15:35')
+end)
+add_test(pr9, 'lunch-break-roman', function()
+    return roman[rr(1, 3)] .. '\n' .. roman[rr(4, 5)],
+        match_str('14:20-15:35')
+end)
+
 return pr9
 
