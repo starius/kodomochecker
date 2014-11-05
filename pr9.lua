@@ -572,5 +572,7 @@ end)
 
 table.insert(pr9, {'triangle3', get_tests(pr9, 'triangle2')})
 
+table.insert(pr9, {'articles2', get_tests(pr9, 'articles')})
+
 return pr9
 
