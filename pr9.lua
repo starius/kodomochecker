@@ -21,6 +21,7 @@ local one_of = require('helpers').one_of
 local unPack = require('helpers').unPack
 local copy_list = require('helpers').copy_list
 local read_file = require('helpers').read_file
+local add_test = require('helpers').add_test
 
 local kurs1 = require('kurs1')
 
@@ -512,7 +513,23 @@ function()
 end,
 }},
 
+{'nucleobase2', {
+function()
+    local nucleobase = one_of('A', 'T', 'G', 'C', 'U')
+    local pp = {A = 'purine', G = 'purine',
+                T = 'pyrimidine', C = 'pyrimidine', U = 'pyrimidine'}
+    return nucleobase, match_str(pp[nucleobase])
+end}},
+
 }
+
+local aas = require('aminoacid').aas
+local aa2props = require('aminoacid').aa2props
+for _, aa in ipairs(aas) do
+    add_test(pr9, 'aminoacid', function()
+        return aa, match_strs(aas.aa2props[aa])
+    end)
+end
 
 return pr9
 
