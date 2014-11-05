@@ -237,5 +237,15 @@ helpers.read_file = function(fname)
     return t
 end
 
+helpers.add_test = function(prac, name0, func)
+    for name, funcs in pairs(prac) do
+        if name == name0 then
+            table.insert(funcs, func)
+            return
+        end
+    end
+    table.insert(prac, {name, {func}})
+end
+
 return helpers
 
