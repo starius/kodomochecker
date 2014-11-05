@@ -77,6 +77,14 @@ helpers.find_numbers = function(out, nn, order)
 #nn, nn_str,
 #numbers, numbers_str)
     end
+    if #numbers > #nn * 2 then
+        return false, string.format([[
+Выход содержит слишком много чисел.
+Мы ожидали %i чисел: %s
+В выходе вашей программы мы нашли %i чисел: %s]],
+#nn, nn_str,
+#numbers, numbers_str)
+    end
     local start = 1
     for i = 1, #nn do
         local hit = arr_find_num(numbers, nn[i], start)
