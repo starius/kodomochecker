@@ -247,5 +247,13 @@ helpers.add_test = function(prac, name0, func)
     table.insert(prac, {name, {func}})
 end
 
+helpers.get_tests = function(prac, name0)
+    for name, funcs in pairs(prac) do
+        if name == name0 then
+            return funcs
+        end
+    end
+end
+
 return helpers
 
