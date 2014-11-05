@@ -238,7 +238,8 @@ helpers.read_file = function(fname)
 end
 
 helpers.add_test = function(prac, name0, func)
-    for name, funcs in pairs(prac) do
+    for _, v in pairs(prac) do
+        name, funcs = helpers.unPack(v)
         if name == name0 then
             table.insert(funcs, func)
             return
@@ -248,7 +249,8 @@ helpers.add_test = function(prac, name0, func)
 end
 
 helpers.get_tests = function(prac, name0)
-    for name, funcs in pairs(prac) do
+    for _, v in pairs(prac) do
+        name, funcs = helpers.unPack(v)
         if name == name0 then
             return funcs
         end
