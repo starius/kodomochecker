@@ -244,7 +244,7 @@ helpers.add_test = function(prac, name0, func)
             return
         end
     end
-    table.insert(prac, {name, {func}})
+    table.insert(prac, {name0, {func}})
 end
 
 helpers.get_tests = function(prac, name0)
