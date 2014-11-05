@@ -570,5 +570,7 @@ add_test(pr9, 'prime2', function()
     return '1', match_choice('1', prime2vars)
 end)
 
+table.insert(pr9, {'triangle3', get_tests(pr9, 'triangle2')})
+
 return pr9
 
