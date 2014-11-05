@@ -22,6 +22,7 @@ local unPack = require('helpers').unPack
 local copy_list = require('helpers').copy_list
 local read_file = require('helpers').read_file
 local add_test = require('helpers').add_test
+local get_tests = require('helpers').get_tests
 
 local kurs1 = require('kurs1')
 
@@ -530,6 +531,8 @@ for _, aa in ipairs(aas) do
         return aa, match_strs(aas.aa2props[aa])
     end)
 end
+
+table.insert(pr9, {'all-lunch2', get_tests(pr9, 'all-lunch')})
 
 return pr9
 
