@@ -103,7 +103,8 @@ function()
         end
         table.insert(points, point)
     end
-    return table.concat(points, '\n'), match_strs(results)
+    return table.concat(points, '\n'),
+        match_strs(unPack(results))
 end)))
 
 -- sequences
@@ -135,7 +136,7 @@ function()
         end
     end
     return table.concat(lines, '\n'),
-        match_strs_no_order(results)
+        match_strs_no_order(unPack(results))
 end))
 
 -- sequence-len
@@ -170,7 +171,7 @@ function()
         table.insert(results, tostring(length))
     end
     return table.concat(lines, '\n'),
-        match_strs(results)
+        match_strs(unPack(results))
 end))
 
 return pr10
