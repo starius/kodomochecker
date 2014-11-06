@@ -168,7 +168,7 @@ function()
             total_length = total_length + length
         end
         table.insert(results, name)
-        table.insert(results, tostring(length))
+        table.insert(results, tostring(total_length))
     end
     return table.concat(lines, '\n'),
         match_strs(unPack(results))
