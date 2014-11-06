@@ -268,7 +268,7 @@ helpers.ifile = function(fname, f)
     return function()
         local text, checker = f()
         helpers.write_file(fname, text)
-        return '', checker
+        return '', checker, text
     end
 end
 
@@ -277,7 +277,8 @@ helpers.ofile = function(fname, f)
         local text, checker = f()
         return text, function()
             local out = helpers.read_file(fname)
-            return checker(out)
+            local ok, message = checker(out)
+            return ok, message, out
         end
     end
 end
