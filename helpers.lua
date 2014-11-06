@@ -237,6 +237,13 @@ helpers.read_file = function(fname)
     return t
 end
 
+helpers.write_file = function(fname, text)
+    local f = io.open(fname, 'w')
+    f:write(text)
+    f:close()
+    return t
+end
+
 helpers.add_test = function(prac, name0, func)
     for _, v in pairs(prac) do
         name, funcs = helpers.unPack(v)
