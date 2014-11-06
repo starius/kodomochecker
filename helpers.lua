@@ -264,5 +264,23 @@ helpers.get_tests = function(prac, name0)
     end
 end
 
+helpers.ifile = function(fname, f)
+    return function()
+        local text, checker = f()
+        helpers.write_file(fname, text)
+        return '', checker
+    end
+end
+
+helpers.ofile = function(fname, f)
+    return function()
+        local text, checker = f()
+        return text, function()
+            local out = helpers.read_file(fname)
+            return checker(out)
+        end
+    end
+end
+
 return helpers
 
