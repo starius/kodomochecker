@@ -139,7 +139,8 @@ if not pcall(debug.getlocal, 4, 1) then
         print('Wrong script name. Format: student_prac_task.py')
         error()
     end
-    if pr_name ~= 'pr8' and pr_name ~= 'pr9' then
+    if pr_name ~= 'pr8' and pr_name ~= 'pr9'
+            and pr_name ~= 'pr10' then
         print('Unknown prac name')
         error()
     end
