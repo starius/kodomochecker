@@ -89,11 +89,11 @@ function()
             x = 5.5 + rr(1, 10)
             y = -5.5 - rr(1, 10)
         elseif r == 'OX' then
-            x = -5.5 + rr(1, 10)
+            x = 5.5 + rr(1, 10)
             y = 0
         elseif r == 'OY' then
             x = 0
-            y = -5.5 + rr(1, 10)
+            y = 5.5 + rr(1, 10)
         end
         local point
         if rr(1, 2) == 1 then
