@@ -282,5 +282,13 @@ helpers.ofile = function(fname, f)
     end
 end
 
+helpers.atgc_rand = function(n)
+    local t = ''
+    for i = 1, n do
+        t = t .. helpers.one_of('A', 'T', 'G', 'C')
+    end
+    return t
+end
+
 return helpers
 
