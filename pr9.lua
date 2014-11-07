@@ -420,8 +420,9 @@ function()
     local doc_start = rr(1900, 2000)
     local doc_stop = doc_start + rr(0, 50)
     local result = 0
-    for i = doc_start, doc_stop, 2 do
-        if i > jorn_start and i < doc_stop then
+    for i = jorn_start, doc_stop, 2 do
+        if i >= doc_start and i < doc_stop
+                and i > jorn_start then
             result = result + 1
         end
     end
@@ -456,7 +457,7 @@ function()
     local middle = (ll_size + 1) / 2
     local result = ll[middle]
     ll = shuffle(ll)
-    local input = table.concat(ll, '\n')
+    local input = table.concat(ll, ' ')
     return input, match_number(result)
 end,
 
@@ -474,7 +475,7 @@ function()
     local middle2 = middle1 + 1
     local result = (ll[middle1] + ll[middle2]) / 2
     ll = shuffle(ll)
-    local input = table.concat(ll, '\n')
+    local input = table.concat(ll, ' ')
     return input, match_number(result)
 end,
 }},
