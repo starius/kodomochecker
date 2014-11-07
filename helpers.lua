@@ -134,7 +134,7 @@ end
 
 helpers.match_str = function(result)
     return function(out)
-        if not out:match(result) then
+        if not out:find(result, 1, true) then
             return false,
                 'выход не содержит правильный ответ ' ..
                 result
@@ -145,13 +145,14 @@ end
 
 helpers.match_choice = function(result, choices)
     return function(out)
-        if not out:match(result) then
+        if not out:find(result, 1, true) then
             return false,
                 'выход не содержит правильный ответ ' ..
                 result
         end
         for _, choice in ipairs(choices) do
-            if choice ~= result and out:match(choice) then
+            if choice ~= result and
+                    out:find(choice, 1, true) then
                 return false,
                     'выход содержит неправильный ответ ' ..
                     choice
