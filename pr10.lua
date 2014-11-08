@@ -174,5 +174,14 @@ function()
         match_strs(unPack(results))
 end))
 
+-- circles
+add_test('circles', function()
+    local n = rr(1, 20)
+    local result = math.pi * (n * (n + 1) / 2 - n / 4)
+    return
+    tostring(n),
+    match_number(result)
+end)
+
 return pr10
 
