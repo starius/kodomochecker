@@ -120,7 +120,7 @@ function()
     local lines = {}
     local results = {}
     for i = 1, n do
-        local name = shortrand()
+        local name = shortrand() .. i
         local description = ''
         if rr(1, 2) == 1 then
             description = ' ' .. shortrand()
@@ -152,7 +152,7 @@ function()
     local lines = {}
     local results = {}
     for i = 1, n do
-        local name = shortrand()
+        local name = shortrand() .. i
         local description = ''
         if rr(1, 2) == 1 then
             description = ' ' .. shortrand()
@@ -198,7 +198,7 @@ function()
     local dna = h.new_fasta()
     local protein = h.new_fasta()
     for i = 1, n do
-        local dna_name = shortrand()
+        local dna_name = shortrand() .. i
         local protein_name = dna_name .. '_protein'
         local description = seq_descr()
         local triplets = rr(1, 100)
@@ -232,7 +232,7 @@ function()
     dna.cin = frame .. '' .. min_length
     local protein = h.new_fasta()
     for i = 1, n do
-        local dna_name = shortrand()
+        local dna_name = shortrand() .. i
         local protein_name_base = dna_name .. '_protein_'
         local description = seq_descr()
         local dna_seq = ''
@@ -291,7 +291,7 @@ function()
     local dna1 = h.new_fasta()
     local dna2 = h.new_fasta()
     for i = 1, n do
-        local name = shortrand()
+        local name = shortrand() .. i
         local description = seq_descr()
         local seq = atgc_rand(rr(1, 30))
         local complement = helpers.complement(seq)
