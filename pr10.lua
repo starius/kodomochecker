@@ -372,6 +372,7 @@ function()
             dna2.name2seq[name] = seq:sub(first, last)
             dna2.name2desc[name] = ''
         end
+        find_orfs()
     end
     for i = 1, n do
         local name = shortrand() .. i
