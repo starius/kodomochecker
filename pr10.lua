@@ -323,5 +323,71 @@ add_test('circles', function()
     match_number(result)
 end)
 
+-- find-orfs
+add_test('find-orfs',
+ifile(itmp, ifasta(
+ofile(otmp, ofasta(
+function()
+    local n = rr(1, 10)
+    local target = rr(1, n)
+    local target_name = shortrand() .. target
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    dna2.names = nil
+    local min_dna_length = 60
+    local add_orfs = function(seq)
+        local add_orf
+        local find_orfs = function()
+            for i = 1, #seq - 2 do
+                if seq:sub(i, i + 2) == 'ATG' then
+                    local stop = i + 3
+                    local last
+                    while stop + 2 <= #seq do
+                        local triplet = seq:sub(stop, stop + 2)
+                        if translation[triplet] == '*' then
+                            last = stop + 2
+                            break
+                        else
+                            stop = stop + 3
+                        end
+                    end
+                    if last and last - i + 1 >=
+                            min_dna_length then
+                        add_orf(i, last)
+                    end
+                end
+            end
+        end
+        add_orf = function(first, last)
+            local name = ('orf_%i_%i'):format(first, last)
+            dna2.name2seq[name] = seq:sub(first, last)
+            dna2.name2desc[name] = ''
+        end
+        find_orfs()
+        seq = h.complement(seq)
+        add_orf = function(first, last)
+            local first1 = #seq - first + 1
+            local last1 = #seq - last + 1
+            local name = ('orf_%i_%i'):format(first1, last1)
+            dna2.name2seq[name] = seq:sub(first, last)
+            dna2.name2desc[name] = ''
+        end
+    end
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq = atgc_rand(rr(1000, 10000))
+        if i == target then
+            name = target_name
+            add_orfs(seq)
+        end
+        dna1.name2seq[name] = seq
+        dna1.name2desc[name] = description
+        table.insert(dna1.names, name)
+    end
+    dna1.cin = itmp .. '\n' .. target_name .. '\n' .. otmp
+    return dna1, match_fasta(dna2)
+end)))))
+
 return pr10
 
