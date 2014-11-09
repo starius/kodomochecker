@@ -317,16 +317,21 @@ helpers.new_fasta = function()
     return fasta
 end
 
+helpers.get_names = function(name2seq)
+    local names = {}
+    for name, seq in pairs(name2seq) do
+        table.insert(names, name)
+    end
+    return names
+end
+
 helpers.write_fasta = function(fasta)
     local width = math.random(40, 65)
     local name2seq = fasta.name2seq
     local name2desc = fasta.name2desc
     local names = fasta.names
     if names == nil then
-        names = {}
-        for name, seq in pairs(name2seq) do
-            table.insert(names, name)
-        end
+        names = helpers.get_names(name2seq)
     end
     local lines = {}
     for _, name in ipairs(names) do
@@ -397,8 +402,13 @@ helpers.fasta_equal = function(fasta1, fasta2)
     if not name2desc2 then
         name2desc2 = name2desc1
     end
-    if not names2 then
-        names2 = names1
+    if names1 == nil then
+        names1 = helpers.get_names(name2seq1)
+        table.sort(names1)
+    end
+    if names2 == nil then
+        names2 = helpers.get_names(name2seq2)
+        table.sort(names2)
     end
     local ae, message = helpers.array_equal(names1, names2)
     if not ae then
