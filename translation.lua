@@ -1,4 +1,4 @@
-return {
+local dna2aa = {
 AAA = "K",
 AAC = "N",
 AAG = "K",
@@ -64,3 +64,13 @@ TTC = "F",
 TTG = "L",
 TTT = "F",
 }
+
+-- http://stackoverflow.com/a/4521960
+if not pcall(debug.getlocal, 4, 1) then
+    local dna = arg[1]
+    if dna then
+        print(dna:gsub('[ATGC][ATGC][ATGC]', dna2aa))
+    end
+end
+
+return dna2aa
