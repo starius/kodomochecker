@@ -309,6 +309,14 @@ end
 -- * name2desc - optional
 -- * names - optional
 
+helpers.new_fasta = function()
+    local fasta = {}
+    fasta.name2seq = {}
+    fasta.name2desc = {}
+    fasta.names = {}
+    return fasta
+end
+
 helpers.write_fasta = function(fasta)
     local width = math.random(40, 65)
     local name2seq = fasta.name2seq
@@ -343,10 +351,7 @@ function string.trim(self)
 end
 
 helpers.read_fasta = function(text)
-    local fasta = {}
-    fasta.name2seq = {}
-    fasta.name2desc = {}
-    fasta.names = {}
+    local fasta = helpers.new_fasta()
     local name0
     for line0 in text:gmatch('([^\n]+)') do
         local line = line0:trim()

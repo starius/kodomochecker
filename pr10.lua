@@ -195,14 +195,8 @@ ifile('input.fasta', ifasta(
 ofile('output.fasta', ofasta(
 function()
     local n = rr(1, 10)
-    local dna = {}
-    dna.name2seq = {}
-    dna.name2desc = {}
-    dna.names = {}
-    local protein = {}
-    protein.name2seq = {}
-    protein.name2desc = {}
-    protein.names = {}
+    local dna = h.new_fasta()
+    local protein = h.new_fasta()
     for i = 1, n do
         local dna_name = shortrand()
         local protein_name = dna_name .. '_protein'
@@ -234,15 +228,9 @@ function()
     local frame = rr(0, 2)
     local min_length = rr(20, 100)
     local n = rr(1, 10)
-    local dna = {}
-    dna.name2seq = {}
-    dna.name2desc = {}
-    dna.names = {}
+    local dna = h.new_fasta()
     dna.cin = frame .. '' .. min_length
-    local protein = {}
-    protein.name2seq = {}
-    protein.name2desc = {}
-    protein.names = {}
+    local protein = h.new_fasta()
     for i = 1, n do
         local dna_name = shortrand()
         local protein_name_base = dna_name .. '_protein_'
