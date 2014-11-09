@@ -296,7 +296,7 @@ function()
         local name = shortrand() .. i
         local description = seq_descr()
         local seq = atgc_rand(rr(1, 30))
-        local complement = helpers.complement(seq)
+        local complement = h.complement(seq)
         if rr(1, 2) == 1 then
             -- palindrome
             seq = seq .. complement
