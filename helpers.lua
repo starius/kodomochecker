@@ -488,5 +488,19 @@ helpers.orf = function(protein_length, can_include_atg)
     return table.concat(dna), table.concat(protein)
 end
 
+helpers.complement = function(seq)
+    return seq:reverse():gsub('%w', {A=T, T=A, G=C, C=G})
+end
+
+helpers.mutate = function(seq)
+    local i = math.random(1, #seq)
+    local prev = seq:sub(i, i)
+    local curr = prev
+    while curr == prev do
+        curr = helpers.atgc_rand(1)
+    end
+    return seq:sub(1, i - 1) .. curr .. seq:sub(i + 1)
+end
+
 return helpers
 

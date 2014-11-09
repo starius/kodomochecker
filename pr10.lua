@@ -279,6 +279,36 @@ function()
     return dna, match_fasta(protein)
 end)))))
 
+-- filter-palindrome
+add_test('filter-palindrome',
+ifile('input.fasta', ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local n = rr(1, 10)
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    for i = 1, n do
+        local name = shortrand()
+        local description = seq_descr()
+        local seq = atgc_rand(rr(1, 30))
+        local complement = helpers.complement(seq)
+        if rr(1, 2) == 1 then
+            -- palindrome
+            seq = seq .. complement
+            dna2.name2seq[name] = seq
+            dna2.name2desc[name] = description
+            table.insert(dna2.names, name)
+        else
+            -- non palindrome
+            seq = seq .. h.mutate(complement)
+        end
+        dna1.name2seq[name] = seq
+        dna1.name2desc[name] = description
+        table.insert(dna1.names, name)
+    end
+    return dna1, match_fasta(dna2)
+end)))))
+
 -- circles
 add_test('circles', function()
     local n = rr(1, 20)
