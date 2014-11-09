@@ -336,7 +336,7 @@ helpers.write_fasta = function(fasta)
     local lines = {}
     for _, name in ipairs(names) do
         local descr = name2desc[name]
-        descr = descr and (' ' .. descr) or ''
+        descr = descr and #descr > 0 and (' ' .. descr) or ''
         table.insert(lines, '>' .. name .. descr)
         local seq = name2seq[name]
         assert(seq ~= nil)
