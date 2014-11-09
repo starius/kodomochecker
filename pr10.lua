@@ -229,7 +229,7 @@ function()
     local min_length = rr(20, 100)
     local n = rr(1, 10)
     local dna = h.new_fasta()
-    dna.cin = frame .. '' .. min_length
+    dna.cin = frame .. ' ' .. min_length
     local protein = h.new_fasta()
     for i = 1, n do
         local dna_name = shortrand() .. i
@@ -241,6 +241,7 @@ function()
         end
         -- add junk to shift to target frame
         add_dna(atgc_rand(frame))
+        local i = 1
         while true do
             local state = rr(1, 14)
             -- states:
@@ -248,26 +249,25 @@ function()
             -- 12 - long ORF
             -- 13 - short ORF
             -- 14 - broken ORF
-            local i = 1
             if state <= 10 then
                 add_dna(h.junk_triplets(rr(5, 100)))
             elseif state == 12 then
                 local l = rr(min_length, min_length * 2)
-                local dna, protein = h.orf(l, true)
+                local dna, aaa = h.orf(l, true)
                 add_dna(dna)
                 --
                 local protein_name = protein_name_base .. i
-                protein.name2seq[protein_name] = protein
+                protein.name2seq[protein_name] = aaa
                 protein.name2desc[protein_name] = ''
                 table.insert(protein.names, protein_name)
                 i = i + 1
             elseif state == 13 then
                 local l = rr(1, min_length - 1)
-                local dna, protein = h.orf(l, true)
+                local dna, aaa = h.orf(l, true)
                 add_dna(dna)
             elseif state == 14 then
                 local l = rr(min_length, min_length * 2)
-                local dna, protein = h.orf(l, true)
+                local dna, aaa = h.orf(l, true)
                 dna = dna:sub(1, #dna - rr(1, 3))
                 add_dna(dna)
                 break
