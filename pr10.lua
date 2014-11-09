@@ -258,6 +258,7 @@ function()
                 --
                 local protein_name = protein_name_base .. i
                 protein.name2seq[protein_name] = protein
+                protein.name2desc[protein_name] = ''
                 table.insert(protein.names, protein_name)
                 i = i + 1
             elseif state == 13 then
@@ -290,6 +291,7 @@ function()
     local n = rr(1, 10)
     local dna1 = h.new_fasta()
     local dna2 = h.new_fasta()
+    dna2.names = nil -- unordered
     for i = 1, n do
         local name = shortrand() .. i
         local description = seq_descr()
@@ -300,7 +302,6 @@ function()
             seq = seq .. complement
             dna2.name2seq[name] = seq
             dna2.name2desc[name] = description
-            table.insert(dna2.names, name)
         else
             -- non palindrome
             seq = seq .. h.mutate(complement)
