@@ -499,8 +499,11 @@ helpers.orf = function(protein_length, can_include_atg)
 end
 
 helpers.complement = function(seq)
-    return seq:reverse():gsub('%w', {A=T, T=A, G=C, C=G})
+    return seq:reverse():gsub('%w',
+        {A='T', T='A', G='C', C='G'})
 end
+
+assert(helpers.complement('AATG') == 'CATT')
 
 helpers.mutate = function(seq)
     local i = math.random(1, #seq)
