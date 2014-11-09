@@ -279,10 +279,13 @@ function()
     return dna, match_fasta(protein)
 end)))))
 
+local itmp = os.tmpname()
+local otmp = os.tmpname()
+
 -- filter-palindrome
 add_test('filter-palindrome',
-ifile('input.fasta', ifasta(
-ofile('output.fasta', ofasta(
+ifile(itmp, ifasta(
+ofile(otmp, ofasta(
 function()
     local n = rr(1, 10)
     local dna1 = h.new_fasta()
@@ -306,6 +309,7 @@ function()
         dna1.name2desc[name] = description
         table.insert(dna1.names, name)
     end
+    dna1.cin = itmp .. '\n' .. otmp
     return dna1, match_fasta(dna2)
 end)))))
 
