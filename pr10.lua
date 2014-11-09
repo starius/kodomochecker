@@ -5,6 +5,7 @@ local pf = string.format
 math.randomseed(os.time())
 
 local map1to3 = require('map1to3')
+local translation = require('translation')
 local shortrand = require('helpers').shortrand
 local shuffle = require('helpers').shuffle
 local rr = math.random
@@ -26,6 +27,9 @@ local read_file = require('helpers').read_file
 local get_tests = require('helpers').get_tests
 local ifile = require('helpers').ifile
 local ofile = require('helpers').ofile
+local ifasta = require('helpers').ifasta
+local ofasta = require('helpers').ofasta
+local match_fasta = require('helpers').match_fasta
 local atgc_rand = require('helpers').atgc_rand
 
 local pr10 = {}
@@ -173,6 +177,52 @@ function()
     return table.concat(lines, '\n'),
         match_strs(unPack(results))
 end))
+
+local seq_descr = function()
+    local d = {}
+    local n = rr(0, 5)
+    for i = 1, n do
+        table.insert(d, shortrand())
+    end
+    return table.concat(d, ' ')
+end
+
+-- translation
+add_test('translation',
+ifile('input.fasta', ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local n = rr(1, 10)
+    local dna = {}
+    dna.name2seq = {}
+    dna.name2desc = {}
+    dna.names = {}
+    local protein = {}
+    protein.name2seq = {}
+    protein.name2desc = {}
+    protein.names = {}
+    for i = 1, n do
+        local dna_name = shortrand()
+        local protein_name = dna_name .. '_protein'
+        local description = seq_descr()
+        local triplets = rr(1, 100)
+        local dna_seq = ''
+        local protein_seq = ''
+        for j = 1, triplets do
+            local triplet = atgc_rand(3)
+            local aa = translation[triplet]
+            dna_seq = dna_seq .. triplet
+            protein_seq = protein_seq .. aa
+        end
+        dna.name2seq[dna_name] = dna_seq
+        dna.name2desc[dna_name] = description
+        protein.name2seq[protein_name] = protein_seq
+        protein.name2desc[protein_name] = description
+        table.insert(dna.names, dna_name)
+        table.insert(protein.names, protein_name)
+    end
+    return dna, match_fasta(protein)
+end)))))
 
 -- circles
 add_test('circles', function()

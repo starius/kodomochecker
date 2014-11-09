@@ -292,5 +292,147 @@ helpers.atgc_rand = function(n)
     return t
 end
 
+-- class fasta:
+-- * name2seq
+-- * name2desc - optional
+-- * names - optional
+
+helpers.write_fasta = function(fasta)
+    local width = math.random(40, 65)
+    local name2seq = fasta.name2seq
+    local name2desc = fasta.name2desc
+    local names = fasta.names
+    if names == nil then
+        names = {}
+        for name, seq in pairs(name2seq) do
+            table.insert(names, name)
+        end
+    end
+    local lines = {}
+    for _, name in ipairs(names) do
+        local descr = name2desc[name]
+        descr = descr and (' ' .. descr) or ''
+        table.insert(lines, '>' .. name .. descr)
+        local seq = name2seq[name]
+        assert(seq ~= nil)
+        local pos = 1
+        while pos <= #seq do
+            table.insert(lines, seq:sub(pos, pos + width - 1))
+            pos = pos + width
+        end
+    end
+    return table.concat(lines, '\n')
+end
+
+function string.trim(self)
+    local text = self:gsub("%s+$", "")
+    text = text:gsub("^%s+", "")
+    return text
+end
+
+helpers.read_fasta = function(text)
+    local fasta = {}
+    fasta.name2seq = {}
+    fasta.name2desc = {}
+    fasta.names = {}
+    local name0
+    for line0 in text:gmatch('([^\n]+)') do
+        local line = line0:trim()
+        if line:sub(1, 1) == '>' then
+            local name, descr = line:match('>([%w%p]+) *(.*)')
+            name0 = name
+            fasta.name2desc[name] = descr
+            fasta.name2seq[name] = ''
+            table.insert(fasta.names, name)
+        elseif name0 then
+            line = line:gsub('%s', '')
+            fasta.name2seq[name0] = fasta.name2seq[name0] ..
+                line
+        else
+            -- junk before first sequence => stop
+            break
+        end
+    end
+    return fasta
+end
+
+helpers.array_equal = function(t1, t2)
+    if #t1 ~= #t2 then
+        return false, 'Число элементов отличается'
+    end
+    for i = 1, #t1 do
+        if t1[i] ~= t2[i] then
+            return false, 'Элемент с номером ' .. i ..
+                ' отличается: "' .. t1[i] .. '", "' ..
+                t2[i] .. '"'
+        end
+    end
+    return true
+end
+
+helpers.fasta_equal = function(fasta1, fasta2)
+    local name2seq1 = fasta1.name2seq
+    local name2desc1 = fasta1.name2desc
+    local names1 = fasta1.names
+    local name2seq2 = fasta2.name2seq
+    local name2desc2 = fasta2.name2desc
+    local names2 = fasta2.names
+    if not name2desc2 then
+        name2desc2 = name2desc1
+    end
+    if not names2 then
+        names2 = names1
+    end
+    local ae, message = helpers.array_equal(names1, names2)
+    if not ae then
+        return false, 'Разный набор последовательностей. ' ..
+            message
+    end
+    for _, name in ipairs(names1) do
+        if name2seq1[name] ~= name2seq2[name] then
+            return false, 'Последовательность ' .. name ..
+                ' отличается'
+        end
+        if name2desc1[name] ~= name2desc2[name] then
+            return false, 'Описание последовательности ' ..
+                name .. ' отличается'
+        end
+    end
+    return true
+end
+
+helpers.ifasta = function(f)
+    return function()
+        local fasta, checker = f()
+        local text = helpers.write_fasta(fasta)
+        return text, checker, text
+    end
+end
+
+helpers.ofasta = function(f)
+    return function()
+        local text, checker = f()
+        return text, function(out)
+            local fasta = helpers.read_fasta(out)
+            local ok, message = checker(fasta)
+            return ok, message, out
+        end
+    end
+end
+
+helpers.match_fasta = function(fasta0)
+    return function(fasta)
+        local fe, message = helpers.fasta_equal(fasta, fasta0)
+        if not fe then
+            return false,
+string.format([[FASTA-файлы не соответствуют.
+Сообщение об ошибке: %s
+Мы ожидали получить такой файл:
+%s]], message, helpers.write_fasta(fasta0))
+        end
+        return true
+    end
+end
+
 return helpers
 
