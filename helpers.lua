@@ -1,6 +1,8 @@
 
 local helpers = {}
 
+local translation = require 'translation'
+
 helpers.unPack = unpack or table.unpack
 
 helpers.shortrand = function()
@@ -267,9 +269,19 @@ end
 
 helpers.ifile = function(fname, f)
     return function()
-        local text, checker = f()
+        local data, checker = f()
+        local text, cin
+        if type(data) == 'string' then
+            text = data
+            cin = ''
+        elseif type(data) == 'table' then
+            text = data.text
+            cin = data.cin
+        else
+            error()
+        end
         helpers.write_file(fname, text)
-        return '', checker, text
+        return cin, checker, text .. '\n\n' .. cin
     end
 end
 
@@ -404,8 +416,10 @@ end
 helpers.ifasta = function(f)
     return function()
         local fasta, checker = f()
-        local text = helpers.write_fasta(fasta)
-        return text, checker, text
+        local data = {}
+        data.text = helpers.write_fasta(fasta)
+        data.cin = fasta.cin or ''
+        return data, checker, data.text .. '\n\n' .. data.cin
     end
 end
 
@@ -432,6 +446,41 @@ string.format([[FASTA-файлы не соответствуют.
         end
         return true
     end
+end
+
+helpers.junk_triplet = function(can_include_atg)
+    local triplet
+    while not triplet or translation[triplet] == '*'
+            or (not can_include_atg and triplet == 'ATG') do
+        triplet = helpers.atgc_rand(3)
+    end
+    return triplet
+end
+
+helpers.junk_triplets = function(n, can_include_atg)
+    local tt = {}
+    for i = 1, n do
+        table.insert(tt, helpers.junk_triplet(can_include_atg))
+    end
+    return table.concat(tt)
+end
+
+helpers.stop_codon = function()
+    return helpers.one_of('TAA', 'TAG', 'TGA')
+end
+
+helpers.orf = function(protein_length, can_include_atg)
+    local dna = {}
+    table.insert(dna, 'ATG')
+    for i = 1, protein_length - 1 do
+        table.insert(dna, helpers.junk_triplet(can_include_atg))
+    end
+    table.insert(dna, helpers.stop_codon())
+    local protein = {}
+    for _, triplet in ipairs(dna) do
+        table.insert(protein, translation[triplet])
+    end
+    return table.concat(dna), table.concat(protein)
 end
 
 return helpers

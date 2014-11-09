@@ -32,6 +32,8 @@ local ofasta = require('helpers').ofasta
 local match_fasta = require('helpers').match_fasta
 local atgc_rand = require('helpers').atgc_rand
 
+local h = require('helpers')
+
 local pr10 = {}
 
 local add_test = function(name, func)
@@ -220,6 +222,71 @@ function()
         protein.name2desc[protein_name] = description
         table.insert(dna.names, dna_name)
         table.insert(protein.names, protein_name)
+    end
+    return dna, match_fasta(protein)
+end)))))
+
+-- translation-in-frame
+add_test('translation-in-frame',
+ifile('input.fasta', ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local frame = rr(0, 2)
+    local min_length = rr(20, 100)
+    local n = rr(1, 10)
+    local dna = {}
+    dna.name2seq = {}
+    dna.name2desc = {}
+    dna.names = {}
+    dna.cin = frame .. '' .. min_length
+    local protein = {}
+    protein.name2seq = {}
+    protein.name2desc = {}
+    protein.names = {}
+    for i = 1, n do
+        local dna_name = shortrand()
+        local protein_name_base = dna_name .. '_protein_'
+        local description = seq_descr()
+        local dna_seq = ''
+        local add_dna = function(t)
+            dna_seq = dna_seq .. t
+        end
+        -- add junk to shift to target frame
+        add_dna(atgc_rand(frame))
+        while true do
+            local state = rr(1, 14)
+            -- states:
+            -- 1-10 - junk triplets
+            -- 12 - long ORF
+            -- 13 - short ORF
+            -- 14 - broken ORF
+            local i = 1
+            if state <= 10 then
+                add_dna(h.junk_triplets(rr(5, 100)))
+            elseif state == 12 then
+                local l = rr(min_length, min_length * 2)
+                local dna, protein = h.orf(l, true)
+                add_dna(dna)
+                --
+                local protein_name = protein_name_base .. i
+                protein.name2seq[protein_name] = protein
+                table.insert(protein.names, protein_name)
+                i = i + 1
+            elseif state == 13 then
+                local l = rr(1, min_length - 1)
+                local dna, protein = h.orf(l, true)
+                add_dna(dna)
+            elseif state == 14 then
+                local l = rr(min_length, min_length * 2)
+                local dna, protein = h.orf(l, true)
+                dna = dna:sub(1, #dna - rr(1, 3))
+                add_dna(dna)
+                break
+            end
+        end
+        dna.name2seq[dna_name] = dna_seq
+        dna.name2desc[dna_name] = description
+        table.insert(dna.names, dna_name)
     end
     return dna, match_fasta(protein)
 end)))))
