@@ -18,7 +18,8 @@ for line0 in io.lines('sims.txt') do
         else
             b = line
             print('==========================')
-            local cmd = string.format('sdiff %s %s', a, b)
+            local cmd = string.format(
+                'sdiff -dBWbEi --strip-trailing-cr %s %s', a, b)
             os.execute(cmd)
             print('')
             local sol
