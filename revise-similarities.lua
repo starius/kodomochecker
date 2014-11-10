@@ -19,7 +19,7 @@ for line0 in io.lines('sims.txt') do
             b = line
             print('==========================')
             local cmd = string.format(
-                'sdiff -dBWbEi --strip-trailing-cr %s %s', a, b)
+                'wdiff %s %s | colordiff', a, b)
             os.execute(cmd)
             print('')
             local sol
