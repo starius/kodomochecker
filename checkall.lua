@@ -11,6 +11,8 @@ excel = {}
 
 local fiseen = {}
 
+local pr_name = ''
+
 local add_to_report = function(stud, mnem, fi, py, report)
     local key = stud .. '|' .. mnem .. '|' .. fi
     if not fiseen[key] then
@@ -19,7 +21,8 @@ local add_to_report = function(stud, mnem, fi, py, report)
         if py then
             fname = py .. '.txt'
         else
-            fname = 'py/' .. stud .. '_pr8_' .. mnem .. '.txt'
+            fname = string.format('py/%s_%s_%s.txt',
+                stud, pr_name, mnem)
         end
         local report_file = io.open(fname, 'a')
         report_file:write(report .. '\n')
@@ -111,7 +114,7 @@ end
 
 -- http://stackoverflow.com/a/4521960
 if not pcall(debug.getlocal, 4, 1) then
-    local pr_name = arg[1]
+    pr_name = arg[1]
     local N = arg[2] or 30
     N = tonumber(N)
     local stud = arg[3]
