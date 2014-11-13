@@ -14,7 +14,7 @@ class Welcome extends Widget
 Пример: ~/term1/block3/credits/Pupkine_pr9_hello.py
 ]]
     form {
-      action: "/send"
+      action: @url_for('send')
       method: "POST"
       enctype: "multipart/form-data"
     }, ->
