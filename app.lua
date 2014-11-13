@@ -9,7 +9,8 @@ end)
 
 app:post("send", "/send", function(self)
     local file = self.params.uploaded_file
-    if not file or not file.filename then
+    if not file or not file.filename or
+            file.filename == '' then
         return 'No Python file uploaded'
     end
     local fname = '/tmp/' .. file.filename
