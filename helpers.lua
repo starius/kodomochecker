@@ -402,12 +402,15 @@ helpers.fasta_equal = function(fasta1, fasta2)
     if not name2desc2 then
         name2desc2 = name2desc1
     end
+    local sort = (not names1) or (not names2)
     if names1 == nil then
         names1 = helpers.get_names(name2seq1)
-        table.sort(names1)
     end
     if names2 == nil then
         names2 = helpers.get_names(name2seq2)
+    end
+    if sort then
+        table.sort(names1)
         table.sort(names2)
     end
     local ae, message = helpers.array_equal(names1, names2)
