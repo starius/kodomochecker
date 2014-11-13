@@ -15,6 +15,8 @@ local match_numbers_no_order =
     require('helpers').match_numbers_no_order
 local match_str = require('helpers').match_str
 local match_strs = require('helpers').match_strs
+local match_strs_no_order =
+    require('helpers').match_strs_no_order
 local match_choice = require('helpers').match_choice
 local bool_wrapper = require('helpers').bool_wrapper
 local one_of = require('helpers').one_of
@@ -529,7 +531,7 @@ local aas = require('aminoacid').aas
 local aa2props = require('aminoacid').aa2props
 for _, aa in ipairs(aas) do
     add_test(pr9, 'aminoacid', function()
-        return aa, match_strs(unPack(aa2props[aa]))
+        return aa, match_strs_no_order(unPack(aa2props[aa]))
     end)
 end
 
