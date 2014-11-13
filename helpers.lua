@@ -20,7 +20,7 @@ end
 
 helpers.all_numbers = function(t)
     local numbers = {}
-    for w in string.gmatch(t, "%-?%d+%.?%d*") do
+    for w in string.gmatch(t, "%-?%d+%.?[%de%-]*") do
         table.insert(numbers, tonumber(w))
     end
     return numbers
