@@ -141,7 +141,7 @@ if not pcall(debug.getlocal, 4, 1) then
         error()
     end
     if pr_name ~= 'pr8' and pr_name ~= 'pr9'
-            and pr_name ~= 'pr10' then
+            and pr_name ~= 'pr10' and pr_name ~= 'pr11' then
         print('Unknown prac name')
         error()
     end
