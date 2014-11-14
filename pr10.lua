@@ -231,8 +231,8 @@ function()
     local dna = h.new_fasta()
     dna.cin = frame .. ' ' .. min_length
     local protein = h.new_fasta()
-    for i = 1, n do
-        local dna_name = shortrand() .. i
+    for ii = 1, n do
+        local dna_name = shortrand() .. ii
         local protein_name_base = dna_name .. '_protein_'
         local description = seq_descr()
         local dna_seq = ''
