@@ -44,8 +44,9 @@ end
 add_test('trigonometry', function()
     local degrees = rr(-10000, 10000) / 10
     local radians = math.rad(degrees)
-    return tostring(degrees),
-        match_numbers(math.sin(radians), math.cos(radians))
+    return '',
+        match_numbers(math.sin(radians), math.cos(radians)),
+        tostring(degrees), tostring(degrees)
 end)
 
 add_test('randomdna',
@@ -54,7 +55,8 @@ function()
     local nseqs = rr(1, 10)
     local min_len = rr(1, 10)
     local max_len = rr(min_len, min_len + 3)
-    return pf('%i\n%i\n%i', nseqs, min_len, max_len),
+    local input = pf('%i %i %i', nseqs, min_len, max_len)
+    return '',
     function(fasta)
         if #fasta.names ~= nseqs then
             return false,
@@ -78,17 +80,19 @@ function()
             end
         end
         return true
-    end
+    end, input, input
 end)))
 
 add_test('urllib2', function()
-    return 'http://google.com\ngoogle',
-        match_choice('YES', {'YES', 'NO'})
+    local input = 'http://google.com google'
+    return '', match_choice('YES', {'YES', 'NO'}),
+        input, input
 end)
 
 add_test('urllib2', function()
-    return 'http://google.com\nyandex',
-        match_choice('NO', {'YES', 'NO'})
+    local input = 'http://google.com yandex'
+    return '', match_choice('NO', {'YES', 'NO'}),
+        input, input
 end)
 
 local pr10 = require('pr10')
@@ -104,8 +108,8 @@ add_test('fibonacci', function()
         local b = ll[#ll - 1]
         table.insert(ll, a + b)
     end
-    return tostring(n),
-        match_numbers(unPack(ll))
+    return '', match_numbers(unPack(ll)),
+        tostring(n), tostring(n)
 end)
 
 return pr11

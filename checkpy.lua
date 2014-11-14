@@ -11,14 +11,13 @@ checkpy.checkpy = function(task, py)
     if not checkpy.tmpout_fname then
         checkpy.tmpout_fname = os.tmpname()
     end
-    local task_in, task_check, task_in_repr = task()
-    if not task_in_repr then
-        task_in_repr = task_in
-    end
+    local task_in, task_check, task_in_repr, argv = task()
+    task_in_repr = task_in_repr or argv or task_in
+    argv = argv or ''
     local tmpin = io.open(checkpy.tmpin_fname, 'w')
     tmpin:write(task_in .. '\n\n\n')
     tmpin:close()
-    local cmd = pf('python %s < %s > %s 2>&1', py,
+    local cmd = pf('python %s %s < %s > %s 2>&1', py, argv,
         checkpy.tmpin_fname, checkpy.tmpout_fname)
     local run_ok = helpers.execute(cmd)
     local tmpout = io.open(checkpy.tmpout_fname, 'r')

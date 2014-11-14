@@ -269,7 +269,7 @@ end
 
 helpers.ifile = function(fname, f)
     return function()
-        local data, checker = f()
+        local data, checker, _1, _2 = f()
         local text, cin
         if type(data) == 'string' then
             text = data
@@ -281,18 +281,18 @@ helpers.ifile = function(fname, f)
             error()
         end
         helpers.write_file(fname, text)
-        return cin, checker, text .. '\n\n' .. cin
+        return cin, checker, text .. '\n\n' .. cin, _2
     end
 end
 
 helpers.ofile = function(fname, f)
     return function()
-        local text, checker = f()
+        local text, checker, _1, _2 = f()
         return text, function()
             local out = helpers.read_file(fname)
             local ok, message = checker(out)
             return ok, message, out
-        end
+        end, _1, _2
     end
 end
 
@@ -433,22 +433,23 @@ end
 
 helpers.ifasta = function(f)
     return function()
-        local fasta, checker = f()
+        local fasta, checker, _1, _2 = f()
         local data = {}
         data.text = helpers.write_fasta(fasta)
         data.cin = fasta.cin or ''
-        return data, checker, data.text .. '\n\n' .. data.cin
+        return data, checker,
+            data.text .. '\n\n' .. data.cin, _2
     end
 end
 
 helpers.ofasta = function(f)
     return function()
-        local text, checker = f()
+        local text, checker, _1, _2 = f()
         return text, function(out)
             local fasta = helpers.read_fasta(out)
             local ok, message = checker(fasta)
             return ok, message, out
-        end
+        end, _1, _2
     end
 end
 
