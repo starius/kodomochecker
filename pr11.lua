@@ -95,10 +95,67 @@ add_test('urllib2', function()
         input, input
 end)
 
-local pr10 = require('pr10')
-local translation_in_frame = get_tests(pr10,
-    'translation-in-frame')[1]
-add_test(translation_in_frame)
+local itmp = os.tmpname()
+local otmp = os.tmpname()
+
+-- translation-in-frame
+add_test('translation-in-frame-argv',
+ifile(itmp, ifasta(
+ofile(otmp, ofasta(
+function()
+    local frame = rr(0, 2)
+    local min_length = rr(20, 100)
+    local n = rr(1, 10)
+    local dna = h.new_fasta()
+    local protein = h.new_fasta()
+    local dna_name = shortrand()
+    local protein_name_base = dna_name .. '_protein_'
+    local description = seq_descr()
+    local dna_seq = ''
+    local add_dna = function(t)
+        dna_seq = dna_seq .. t
+    end
+    -- add junk to shift to target frame
+    add_dna(atgc_rand(frame))
+    local i = 1
+    while true do
+        local state = rr(1, 14)
+        -- states:
+        -- 1-10 - junk triplets
+        -- 12 - long ORF
+        -- 13 - short ORF
+        -- 14 - broken ORF
+        if state <= 10 then
+            add_dna(h.junk_triplets(rr(5, 100)))
+        elseif state == 12 then
+            local l = rr(min_length, min_length * 2)
+            local dna, aaa = h.orf(l, true)
+            add_dna(dna)
+            --
+            local protein_name = protein_name_base .. i
+            protein.name2seq[protein_name] = aaa
+            protein.name2desc[protein_name] = ''
+            table.insert(protein.names, protein_name)
+            i = i + 1
+        elseif state == 13 then
+            local l = rr(1, min_length - 1)
+            local dna, aaa = h.orf(l, true)
+            add_dna(dna)
+        elseif state == 14 then
+            local l = rr(min_length, min_length * 2)
+            local dna, aaa = h.orf(l, true)
+            dna = dna:sub(1, #dna - rr(1, 3))
+            add_dna(dna)
+            break
+        end
+    end
+    dna.name2seq[dna_name] = dna_seq
+    dna.name2desc[dna_name] = description
+    table.insert(dna.names, dna_name)
+    local argv = itmp .. ' ' .. frame .. ' ' .. min_length ..
+        otmp
+    return dna, match_fasta(protein), argv, argv
+end)))))
 
 add_test('fibonacci', function()
     local n = rr(6, 30)
