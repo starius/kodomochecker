@@ -394,7 +394,7 @@ end
 
 helpers.fasta_equal = function(fasta1, fasta2)
     local name2seq1 = fasta1.name2seq
-    local name2desc1 = fasta1.name2desc or {}
+    local name2desc1 = fasta1.name2desc
     local names1 = fasta1.names
     local name2seq2 = fasta2.name2seq
     local name2desc2 = fasta2.name2desc
@@ -469,7 +469,7 @@ end
 
 local rename_fasta = function(fasta)
     fasta.names = nil
-    fasta.name2desc = nil
+    fasta.name2desc = {}
     local seqs = {}
     for _, seq in pairs(fasta.name2seq) do
         table.insert(seqs, seq)
@@ -485,7 +485,7 @@ helpers.match_fasta_no_names = function(fasta0)
     rename_fasta(fasta0)
     return function(fasta)
         rename_fasta(fasta)
-        return match_fasta(fasta0)(fasta)
+        return helpers.match_fasta(fasta0)(fasta)
     end
 end
 
@@ -559,7 +559,7 @@ helpers.find_palindromes = function(seq, min_length)
             local last = left_middle + 1 + i
             if not compl(first, last) then
                 -- return previous good palindrome or ''
-                return seq:sub(fisrt + 1, last - 1)
+                return seq:sub(first + 1, last - 1)
             end
         end
         return ''
