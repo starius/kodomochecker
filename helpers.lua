@@ -600,5 +600,10 @@ helpers.seq_descr = function()
     return table.concat(d, ' ')
 end
 
+helpers.make_palindrome = function(half_length)
+    local seq = helpers.atgc_rand(half_length)
+    return seq .. helpers.complement(seq)
+end
+
 return helpers
 

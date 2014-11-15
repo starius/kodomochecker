@@ -184,7 +184,14 @@ function()
     for i = 1, n do
         local name = shortrand() .. i
         local description = seq_descr()
-        local seq = atgc_rand(rr(1000, 10000))
+        local big_palindromes = rr(0, 5)
+        local parts = {}
+        for k = 1, big_palindromes do
+            table.insert(parts, atgc_rand(rr(0, 100)))
+            table.insert(parts, h.make_palindrome(rr(2, 50)))
+            table.insert(parts, atgc_rand(rr(0, 100)))
+        end
+        local seq = table.concat(parts)
         if i == target then
             name = target_name
             local pp = h.find_palindromes(seq, min_length)
