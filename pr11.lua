@@ -155,6 +155,7 @@ function()
     table.insert(dna.names, dna_name)
     local argv = itmp .. ' ' .. frame .. ' ' .. min_length ..
         otmp
+    dna.cin = argv
     return dna, match_fasta(protein), argv, argv
 end)))))
 
@@ -205,6 +206,7 @@ function()
         table.insert(dna1.names, name)
     end
     local argv = itmp .. ' ' .. target_name .. ' ' .. otmp
+    dna1.cin = argv
     return dna1, h.match_fasta_no_names(dna2), '', argv
 end)))))
 
