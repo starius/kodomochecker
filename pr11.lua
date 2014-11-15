@@ -31,6 +31,7 @@ local ifasta = require('helpers').ifasta
 local ofasta = require('helpers').ofasta
 local match_fasta = require('helpers').match_fasta
 local atgc_rand = require('helpers').atgc_rand
+local seq_descr = require('helpers').seq_descr
 
 local h = require('helpers')
 

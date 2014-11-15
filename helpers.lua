@@ -591,5 +591,14 @@ helpers.find_palindromes = function(seq, min_length)
     return palindromes2
 end
 
+helpers.seq_descr = function()
+    local d = {}
+    local n = math.random(0, 5)
+    for i = 1, n do
+        table.insert(d, helpers.shortrand())
+    end
+    return table.concat(d, ' ')
+end
+
 return helpers
 

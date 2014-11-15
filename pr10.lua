@@ -31,6 +31,7 @@ local ifasta = require('helpers').ifasta
 local ofasta = require('helpers').ofasta
 local match_fasta = require('helpers').match_fasta
 local atgc_rand = require('helpers').atgc_rand
+local seq_descr = require('helpers').seq_descr
 
 local h = require('helpers')
 
@@ -179,15 +180,6 @@ function()
     return table.concat(lines, '\n'),
         match_strs(unPack(results))
 end))
-
-local seq_descr = function()
-    local d = {}
-    local n = rr(0, 5)
-    for i = 1, n do
-        table.insert(d, shortrand())
-    end
-    return table.concat(d, ' ')
-end
 
 -- translation
 add_test('translation',
