@@ -130,6 +130,8 @@ end
 -- http://stackoverflow.com/a/4521960
 if not pcall(debug.getlocal, 4, 1) then
     local py = arg[1]
+    local N = arg[2] or 100
+    N = tonumber(N)
     if not py then
         print('No Python script provided')
         error()
@@ -162,7 +164,7 @@ if not pcall(debug.getlocal, 4, 1) then
     local pep8ok = 2
     local pep8text = ''
     local test_started = os.time()
-    for i = 1, 100 do
+    for i = 1, N do
         if os.difftime(os.time(), test_started) > 15 then
             -- test takes more than 15 seconds
             break
