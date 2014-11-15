@@ -394,7 +394,7 @@ end
 
 helpers.fasta_equal = function(fasta1, fasta2)
     local name2seq1 = fasta1.name2seq
-    local name2desc1 = fasta1.name2desc
+    local name2desc1 = fasta1.name2desc or {}
     local names1 = fasta1.names
     local name2seq2 = fasta2.name2seq
     local name2desc2 = fasta2.name2desc
@@ -467,6 +467,28 @@ string.format([[FASTA-файлы не соответствуют.
     end
 end
 
+local rename_fasta = function(fasta)
+    fasta.names = nil
+    fasta.name2desc = nil
+    local seqs = {}
+    for _, seq in pairs(fasta.name2seq) do
+        table.insert(seqs, seq)
+    end
+    table.sort(seqs)
+    fasta.name2seq = {}
+    for i, seq in ipairs(seqs) do
+        fasta.name2seq['seq' .. i] = seq
+    end
+end
+
+helpers.match_fasta_no_names = function(fasta0)
+    rename_fasta(fasta0)
+    return function(fasta)
+        rename_fasta(fasta)
+        return match_fasta(fasta0)(fasta)
+    end
+end
+
 helpers.junk_triplet = function(can_include_atg)
     local triplet
     while not triplet or translation[triplet] == '*'
@@ -517,6 +539,56 @@ helpers.mutate = function(seq)
         curr = helpers.atgc_rand(1)
     end
     return seq:sub(1, i - 1) .. curr .. seq:sub(i + 1)
+end
+
+helpers.find_palindromes = function(seq, min_length)
+    local c_dict = {A='T', T='A', G='C', C='G'}
+    local at = function(i)
+        return seq:sub(i, i)
+    end
+    local in_range = function(i)
+        return i >= 1 and i <= #seq
+    end
+    local compl = function(i, j)
+        return in_range(i) and in_range(j) and
+            c_dict[at(i)] == at(j)
+    end
+    local find_palindrome = function(left_middle)
+        for i = 0, #seq do
+            local first = left_middle - i
+            local last = left_middle + 1 + i
+            if not compl(first, last) then
+                -- return previous good palindrome or ''
+                return seq:sub(fisrt + 1, last - 1)
+            end
+        end
+        return ''
+    end
+    local palindromes = {}
+    for left_middle = 1, #seq do
+        local palindrome = find_palindrome(left_middle)
+        if #palindrome >= min_length then
+            table.insert(palindromes, palindrome)
+        end
+    end
+    table.sort(palindromes, function(a, b)
+        return #b < #a
+    end)
+    local palindromes2 = {}
+    local is_inclusion = function(palindrome)
+        for _, palindrome0 in ipairs(palindromes2) do
+            if palindrome0:match(palindrome) then
+                return true
+            end
+        end
+        return false
+    end
+    for _, palindrome in ipairs(palindromes) do
+        if not is_inclusion(palindrome) then
+            table.insert(palindromes2, palindrome)
+        end
+    end
+    return palindromes2
 end
 
 return helpers

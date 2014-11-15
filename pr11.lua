@@ -169,5 +169,36 @@ add_test('fibonacci', function()
         tostring(n), tostring(n)
 end)
 
+add_test('find-selfcomplement',
+ifile(itmp, ifasta(
+ofile(otmp, ofasta(
+function()
+    local min_length = 4
+    local n = rr(1, 10)
+    local target = rr(1, n)
+    local target_name = shortrand() .. target
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    dna2.names = nil
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq = atgc_rand(rr(1000, 10000))
+        if i == target then
+            name = target_name
+            local pp = h.find_palindromes(seq, min_length)
+            for j, p in ipairs(pp) do
+                local name2 = shortrand() .. j
+                dna2.name2seq[name] = p
+            end
+        end
+        dna1.name2seq[name] = seq
+        dna1.name2desc[name] = description
+        table.insert(dna1.names, name)
+    end
+    local argv = itmp .. ' ' .. target_name .. ' ' .. otmp
+    return dna1, h.match_fasta_no_names(dna2), '', argv
+end)))))
+
 return pr11
 
