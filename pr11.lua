@@ -197,7 +197,7 @@ function()
             local pp = h.find_palindromes(seq, min_length)
             for j, p in ipairs(pp) do
                 local name2 = shortrand() .. j
-                dna2.name2seq[name] = p
+                dna2.name2seq[name2] = p
             end
         end
         dna1.name2seq[name] = seq
