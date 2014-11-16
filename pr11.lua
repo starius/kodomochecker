@@ -154,7 +154,7 @@ function()
     dna.name2desc[dna_name] = description
     table.insert(dna.names, dna_name)
     local argv = itmp .. ' ' .. frame .. ' ' .. min_length ..
-        otmp
+        ' ' .. otmp
     dna.cin = argv
     return dna, match_fasta(protein), argv, argv
 end)))))
