@@ -43,6 +43,7 @@ end
 
 
 local itmp = os.tmpname()
+local itmp2 = os.tmpname()
 local otmp = os.tmpname()
 
 add_test('find-orfs-in-frame',
@@ -331,6 +332,39 @@ function()
     return dna,
         match_choice(result, {'YES', 'NO'}),
         argv, argv
+end)))
+
+add_test('find-matrix',
+ifile(itmp, ifasta(
+function()
+    local prot_l = rr(20, 40)
+    local dna_l = prot_l * 3 + 3
+    local base_dna, base_prot = h.orf(prot_l)
+    local n = rr(5, 10)
+    local target = rr(1, n)
+    local target_name = shortrand() .. target
+    local dna = h.new_fasta()
+    local prot = h.new_fasta()
+    local names = {}
+    for i = 1, n do
+        local name = shortrand() .. i
+        local seq = base_dna
+        if i == target then
+            name = target_name
+        else
+            while h.translate(seq) == base_prot do
+                seq = h.mutate(seq)
+            end
+        end
+        local description = seq_descr()
+        dna:add_seq(name, seq, description)
+        table.insert(names, name)
+    end
+    prot:add_seq('protein', base_prot)
+    h.write_file(itmp2, h.write_fasta(prot))
+    local argv = itmp .. ' ' .. itmp2
+    dna.cin = argv .. '\n\n' .. h.write_fasta(prot)
+    return dna, match_choice(target_name, names), argv, argv
 end)))
 
 return pr12
