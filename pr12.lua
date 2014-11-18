@@ -45,7 +45,6 @@ end
 local itmp = os.tmpname()
 local otmp = os.tmpname()
 
--- translation-in-frame
 add_test('find-orfs-in-frame',
 ifile(itmp, ifasta(
 ofile('output.fasta', ofasta(
@@ -99,8 +98,7 @@ function()
     dna.name2seq[dna_name] = dna_seq
     dna.name2desc[dna_name] = description
     table.insert(dna.names, dna_name)
-    local argv = itmp .. ' ' .. frame .. ' ' .. min_length ..
-        ' ' .. otmp
+    local argv = itmp .. ' ' .. frame .. ' ' .. min_length
     dna.cin = argv
     return dna, match_fasta(protein), argv, argv
 end)))))
