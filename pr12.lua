@@ -367,5 +367,34 @@ function()
     return dna, match_choice(target_name, names), argv, argv
 end)))
 
+add_test('translate-orf',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local dna = h.new_fasta()
+    local prot = h.new_fasta()
+    local n = rr(1, 3)
+    local prot_l = rr(20, 40)
+    local dna_seq
+    for i = n, 1, -1 do
+        if not dna_seq then
+            dna_seq = h.orf(prot_l)
+        else
+            local prefix = h.orf(prot_l):sub(1, -4)
+            dna_seq = prefix .. dna_seq
+        end
+        local prot_seq = h.translate(dna_seq)
+        prot:add_seq('prot_' .. i, prot_seq)
+    end
+    dna:add_seq(shortrand(), dna_seq)
+    prot.names = {}
+    for i = 1, n do
+        table.insert(prot.names, 'prot_' .. i)
+    end
+    local argv = itmp
+    dna.cin = argv
+    return dna, match_fasta(prot), argv, argv
+end)))))
+
 return pr12
 
