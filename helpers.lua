@@ -622,5 +622,9 @@ helpers.make_palindrome = function(half_length)
     return seq .. helpers.complement(seq)
 end
 
+helpers.is_palindrome = function(seq)
+    return seq == helpers.complement(seq)
+end
+
 return helpers
 
