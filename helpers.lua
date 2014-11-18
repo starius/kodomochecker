@@ -235,6 +235,9 @@ end
 
 helpers.read_file = function(fname)
     local f = io.open(fname)
+    if not f then
+        return ''
+    end
     local t = f:read('*a')
     f:close()
     return t
