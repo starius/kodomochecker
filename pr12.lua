@@ -268,5 +268,29 @@ function()
     return dna1, match_fasta(dna2), argv, argv
 end)))))
 
+add_test('protein-consensus',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local prot_l = rr(20, 40)
+    local dna_l = prot_l * 3 + 3
+    local _, base_prot = h.orf(prot_l)
+    base_prot = base_prot:sub(1, -2) -- remove *
+    local n = rr(5, 10)
+    local prot1 = h.new_fasta()
+    local prot2 = h.new_fasta()
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq = h.mutate_n(base_prot, prot_l / 10)
+        prot1:add_seq(name, seq, description)
+    end
+    local consensus = prot1:consensus_protein()
+    prot2:add_seq('consensus', consensus)
+    local argv = itmp
+    prot1.cin = argv
+    return prot1, match_fasta(prot2), argv, argv
+end)))))
+
 return pr12
 

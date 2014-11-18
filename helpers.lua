@@ -347,7 +347,40 @@ local fasta_base = {
         end
         return table.concat(consensus_list)
     end,
+
+    consensus_protein = function(self)
+        local aas = require('aminoacid').aas
+        table.sort(aas)
+        local consensus_list = {}
+        local _, first_seq = next(self.name2seq)
+        local l = #first_seq
+        for j = 1, l do
+            local ld = {}
+            for name, seq in pairs(self.name2seq) do
+                local letter = seq:sub(j, j)
+                assert(letter)
+                ld[letter] = (ld[letter] or 0) + 1
+            end
+            local max_count = 0
+            for letter, count in pairs(ld) do
+                if count > max_count then
+                    max_count = count
+                end
+            end
+            local final_letter
+            for _, aa in ipairs(aas) do
+                if ld[aa] == max_count then
+                    final_letter = aa
+                    break
+                end
+            end
+            assert(final_letter)
+            table.insert(consensus_list, final_letter)
+        end
+        return table.concat(consensus_list)
+    end,
 }
+
 fasta_base.__index = fasta_base
 
 helpers.new_fasta = function()
