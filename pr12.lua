@@ -292,5 +292,25 @@ function()
     return prot1, match_fasta(prot2), argv, argv
 end)))))
 
+add_test('reorigin',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    local name = shortrand()
+    local description = seq_descr()
+    local seq1 = atgc_rand(rr(100, 1000))
+    local shift = rr(0, #seq1 - 1)
+    local part1 = seq1:sub(shift + 1)
+    local part2 = seq1:sub(1, shift)
+    local seq2 = part1 .. part2
+    dna1:add_seq(name, seq1, description)
+    dna2:add_seq(name, seq2, description)
+    local argv = itmp .. ' ' .. shift
+    dna1.cin = argv
+    return dna1, match_fasta(dna2), argv, argv
+end)))))
+
 return pr12
 
