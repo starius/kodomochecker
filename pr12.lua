@@ -197,5 +197,53 @@ function()
         argv, argv
 end)))
 
+add_test('filter-orfs',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local n = rr(1, 10)
+    local min_length_protein = rr(20, 60)
+    local min_length_dna = min_length_protein * 3 + 3
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq, is_orf
+        local choice = rr(1, 5)
+        local l = min_length_protein
+        if choice == 1 then
+            seq = h.orf(rr(l, l * 2))
+            is_orf = true
+        end
+        if choice == 2 then
+            seq = h.orf(rr(5, l - 1))
+        end
+        if choice == 3 then
+            local seq1 = h.orf(rr(l, l * 2))
+            local seq2 = h.orf(rr(l, l * 2))
+            seq = seq1 .. seq2
+        end
+        if choice == 4 then
+            local seq1 = h.orf(rr(l, l * 2))
+            local seq2 = atgc_rand(3 * rr(5, 10))
+            seq = seq1 .. seq2
+        end
+        if choice == 5 then
+            local seq2 = h.orf(rr(l, l * 2))
+            local seq1 = atgc_rand(3 * rr(5, 10))
+            seq = seq1 .. seq2
+        end
+        assert(seq)
+        dna1:add_seq(name, seq, description)
+        if is_orf then
+            dna2:add_seq(name, seq, description)
+        end
+    end
+    local argv = itmp
+    dna1.cin = argv
+    return dna1, match_fasta(dna2), argv, argv
+end)))))
+
 return pr12
 
