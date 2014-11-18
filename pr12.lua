@@ -501,5 +501,31 @@ function()
     return dna1, match_fasta(dna2), argv, argv
 end)))))
 
+add_test('filter-non-polar',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local polar = '[CVILMFYWA]'
+    local n = rr(1, 10)
+    local prot1 = h.new_fasta()
+    local prot2 = h.new_fasta()
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local _, base_prot = h.orf(rr(15, 20))
+        local base_prot1 = base_prot:gsub('%*', '')
+        local polar_seq = base_prot1:gsub(polar, '')
+        local nonpolar_length = #base_prot1 - #polar_seq
+        local is_nonpolar = 2 * nonpolar_length >= #base_prot1
+        prot1:add_seq(name, base_prot, description)
+        if is_nonpolar then
+            prot2:add_seq(name, base_prot, description)
+        end
+    end
+    local argv = itmp
+    prot1.cin = argv
+    return prot1, match_fasta(prot2), argv, argv
+end)))))
+
 return pr12
 
