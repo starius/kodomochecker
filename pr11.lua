@@ -187,6 +187,7 @@ function()
         local description = seq_descr()
         local big_palindromes = rr(0, 5)
         local parts = {}
+        table.insert(parts, atgc_rand(rr(0, 100)))
         for k = 1, big_palindromes do
             table.insert(parts, atgc_rand(rr(0, 100)))
             table.insert(parts, h.make_palindrome(rr(2, 50)))
