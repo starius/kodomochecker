@@ -312,5 +312,26 @@ function()
     return dna1, match_fasta(dna2), argv, argv
 end)))))
 
+add_test('translation-cmp',
+ifile(itmp, ifasta(
+function()
+    local dna = h.new_fasta()
+    local seq1 = h.orf(rr(20, 40))
+    local seq2 = h.mutate_n(seq1, rr(1, 2))
+    local prot1 = h.translate(seq1)
+    local prot2 = h.translate(seq2)
+    if rr(1, 3) == 1 then
+        prot2 = prot1
+    end
+    local result = (prot1 == prot2) and 'YES' or 'NO'
+    dna:add_seq('seq1', seq1)
+    dna:add_seq('seq2', seq2)
+    local argv = itmp
+    dna.cin = argv
+    return dna,
+        match_choice(result, {'YES', 'NO'}),
+        argv, argv
+end)))
+
 return pr12
 

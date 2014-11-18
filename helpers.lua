@@ -691,5 +691,11 @@ helpers.is_palindrome = function(seq)
     return seq == helpers.complement(seq)
 end
 
+helpers.translate = function(seq)
+    return seq:gsub('[ATGC][ATGC][ATGC]', translation)
+end
+
+assert(helpers.translate('ATGTAA') == 'M*')
+
 return helpers
 
