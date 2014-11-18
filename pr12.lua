@@ -103,5 +103,42 @@ function()
     return dna, match_fasta(protein), argv, argv
 end)))))
 
+add_test('find-fixed-palindromes',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local half_length = rr(2, 10)
+    local length = half_length * 2
+    local dna = h.new_fasta()
+    local dna2 = h.new_fasta()
+    local dna_name = shortrand()
+    local description = seq_descr()
+    local dna_seq = ''
+    local add_dna = function(t)
+        dna_seq = dna_seq .. t
+    end
+    local groups = rr(1, 10)
+    for i = 1, groups do
+        local l = half_length + rr(-1, 1)
+        add_dna(atgc_rand(rr(0, 100))) -- junk
+        add_dna(h.make_palindrome(l))
+        add_dna(atgc_rand(rr(0, 100))) -- junk
+    end
+    -- find palindromes
+    local j = 1
+    for i = 1, #dna_seq - length + 1 do
+        local slice = dna_seq:sub(i, i + length - 1)
+        if h.is_palindrome(slice) then
+            local name = 'pal_' .. j
+            dna2:add_seq(name, slice)
+            j = j + 1
+        end
+    end
+    dna:add_seq(dna_name, dna_seq, description)
+    local argv = itmp .. ' ' .. length
+    dna.cin = argv
+    return dna, match_fasta(dna2), argv, argv
+end)))))
+
 return pr12
 
