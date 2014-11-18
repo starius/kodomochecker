@@ -434,5 +434,45 @@ function()
     end, argv, argv
 end)))))
 
+add_test('find-substrings',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local prot1 = h.new_fasta()
+    local n = rr(10, 100)
+    local seqs = {}
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq
+        if rr(1, 2) == 1 or i < 5 then
+            local _, prot_seq = h.orf(rr(15, 30))
+            seq = prot_seq:sub(1, -4)
+        else
+            local s1 = one_of(unPack(seqs))
+            local s2 = one_of(unPack(seqs))
+            seq = s1 .. s2
+        end
+        prot1:add_seq(name, seq, description)
+        table.insert(seqs, seq)
+    end
+    local prot2 = h.new_fasta()
+    for _, name in ipairs(prot1.names) do
+        local seq = prot1.name2seq[name]
+        local count = 0
+        for _, seq1 in ipairs(seqs) do
+            if seq1:find(seq) then
+                count = count + 1
+            end
+        end
+        if count >= 2 then
+            prot2:add_seq(name, seq, prot1.name2desc[name])
+        end
+    end
+    local argv = itmp
+    prot1.cin = argv
+    return prot1, match_fasta(prot2), argv, argv
+end)))))
+
 return pr12
 
