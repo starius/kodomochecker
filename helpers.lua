@@ -312,11 +312,25 @@ end
 -- * name2desc - optional
 -- * names - optional
 
+local fasta_base = {
+    add_seq = function(self, name, seq, description)
+        self.name2seq[name] = seq
+        if self.names then
+            table.insert(self.names, name)
+        end
+        if self.name2desc and description then
+            self.name2desc[name] = description
+        end
+    end
+}
+fasta_base.__index = fasta_base
+
 helpers.new_fasta = function()
     local fasta = {}
     fasta.name2seq = {}
     fasta.name2desc = {}
     fasta.names = {}
+    setmetatable(fasta, fasta_base)
     return fasta
 end
 
