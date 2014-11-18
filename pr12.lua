@@ -171,5 +171,31 @@ function()
     return dna1, match_fasta(dna2), argv, argv
 end)))))
 
+add_test('count-stop-codones',
+ifile(itmp, ifasta(
+function()
+    local dna = h.new_fasta()
+    local n = rr(10, 100)
+    local stops = {}
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq = h.orf(rr(50, 100), true)
+        local stop = seq:sub(-3, -1)
+        stops[stop] = (stops[stop] or 0) + 1
+        dna:add_seq(name, seq, description)
+    end
+    local stops_numbers = {
+        (stops.TGA or 0),
+        (stops.TAA or 0),
+        (stops.TAG or 0),
+    }
+    local argv = itmp
+    dna.cin = argv
+    return dna,
+        match_numbers(unPack(stops_numbers)),
+        argv, argv
+end)))
+
 return pr12
 
