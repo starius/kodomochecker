@@ -321,7 +321,32 @@ local fasta_base = {
         if self.name2desc and description then
             self.name2desc[name] = description
         end
-    end
+    end,
+
+    consensus_dna = function(self)
+        local dna_classes = require 'dna_classes'
+        local consensus_list = {}
+        local _, first_seq = next(self.name2seq)
+        local l = #first_seq
+        for j = 1, l do
+            local letters_set = {}
+            for name, seq in pairs(self.name2seq) do
+                local letter = seq:sub(j, j)
+                assert(letter)
+                letters_set[letter] = true
+            end
+            local letters_list = {}
+            for letter, _ in pairs(letters_set) do
+                table.insert(letters_list, letter)
+            end
+            table.sort(letters_list)
+            local letters_str = table.concat(letters_list)
+            local letter = dna_classes[letters_str]
+            assert(letter)
+            table.insert(consensus_list, letter)
+        end
+        return table.concat(consensus_list)
+    end,
 }
 fasta_base.__index = fasta_base
 
@@ -556,6 +581,13 @@ helpers.mutate = function(seq)
         curr = helpers.atgc_rand(1)
     end
     return seq:sub(1, i - 1) .. curr .. seq:sub(i + 1)
+end
+
+helpers.mutate_n = function(seq, n)
+    for i = 1, n do
+        seq = helpers.mutate(seq)
+    end
+    return seq
 end
 
 helpers.find_palindromes = function(seq, min_length)
