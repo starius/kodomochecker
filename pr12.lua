@@ -474,5 +474,32 @@ function()
     return prot1, match_fasta(prot2), argv, argv
 end)))))
 
+add_test('find-repeats',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local length = rr(6, 10)
+    local dna_seq = atgc_rand(rr(100, 1000))
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    local dna_name = shortrand()
+    local description = seq_descr()
+    local j = 1
+    local seen = {}
+    for i = 1, #dna_seq - length + 1 do
+        local slice = dna_seq:sub(i, i + length - 1)
+        if seen[slice] == true then
+            local name = 'rep_' .. j
+            dna2:add_seq(name, slice)
+            j = j + 1
+        end
+        seen[slice] = true
+    end
+    dna1:add_seq(dna_name, dna_seq, description)
+    local argv = itmp .. ' ' .. length
+    dna1.cin = argv
+    return dna1, match_fasta(dna2), argv, argv
+end)))))
+
 return pr12
 
