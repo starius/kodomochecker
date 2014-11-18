@@ -13,7 +13,7 @@ local fiseen = {}
 
 local pr_name = ''
 
-local add_to_report = function(stud, mnem, fi, py, report)
+local add_to_report = function(stud, mnem, fi, py, report, mode)
     local key = stud .. '|' .. mnem .. '|' .. fi
     if not fiseen[key] then
         fiseen[key] = true
@@ -24,7 +24,7 @@ local add_to_report = function(stud, mnem, fi, py, report)
             fname = string.format('py/%s_%s_%s.txt',
                 stud, pr_name, mnem)
         end
-        local report_file = io.open(fname, 'a')
+        local report_file = io.open(fname, mode)
         report_file:write(report .. '\n')
         report_file:close()
     end
@@ -38,8 +38,17 @@ checkall.set_result = function(stud, mnem, py, ok, report, fi)
     if fi == 'nopy' then
         nopy[key] = true
     end
+    local mode = 'a'
+    if excel[key] == true and not ok then
+        -- remove previous messages from log
+        -- these messages must saying that the script is OK
+        -- while it is not OK
+        mode = 'w'
+    end
     if excel[key] ~= false then
         excel[key] = ok
+    end
+    if excel[key] then
         local p8st = fi
         local p8rep = report
         pep8ok[key] = p8st
@@ -47,17 +56,17 @@ checkall.set_result = function(stud, mnem, py, ok, report, fi)
             report = 'Скрипт работает, но есть серьёзные нарекания ' ..
             'к оформлению кода (см. ниже по-английски):' ..
             '\n\n' .. report
-            add_to_report(stud, mnem, 'pep8', py, report)
+            add_to_report(stud, mnem, 'pep8', py, report, mode)
         end
         if p8st == 1 then
             report = 'Скрипт работает, но есть кое-какие нарекания ' ..
             'к оформлению кода (см. ниже по-английски):' ..
             '\n\n' .. report
-            add_to_report(stud, mnem, 'pep8', py, report)
+            add_to_report(stud, mnem, 'pep8', py, report, mode)
         end
     end
     if not ok then
-        add_to_report(stud, mnem, fi, py, report)
+        add_to_report(stud, mnem, fi, py, report, mode)
     end
 end
 
