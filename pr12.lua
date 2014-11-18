@@ -396,5 +396,43 @@ function()
     return dna, match_fasta(prot), argv, argv
 end)))))
 
+add_test('untranslate',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local prot_l = rr(20, 40)
+    local dna_l = prot_l * 3 + 3
+    local _, base_prot = h.orf(prot_l)
+    local name = shortrand()
+    local description = seq_descr()
+    local prot = h.new_fasta()
+    prot:add_seq(name, base_prot, description)
+    local argv = itmp
+    prot.cin = argv
+    return prot,
+    function(dna)
+        if #dna.names ~= 1 then
+            return false, [[Хотели одну последовательность,
+                а получили ]] .. #dna.names
+        end
+        if dna.names[1] ~= name then
+            return false, [[Неправильно названа
+                последовательность: ]] .. dna.names[1]
+        end
+        if dna.name2desc[name] ~= description then
+            return false, [[Неправильное описание у
+                последовательности: ]] .. dna.name2desc[name]
+        end
+        local prot1 =  h.translate(dna.name2seq[name])
+        if prot1 ~= base_prot then
+            return false, [[Ваша последовательность
+                не транслируется в нужную последовательность
+                белка. Из вашей последовательности
+                получается ]] .. prot1
+        end
+        return true
+    end, argv, argv
+end)))))
+
 return pr12
 
