@@ -551,5 +551,42 @@ function()
     return prot1, match_number(mass_total), argv, argv
 end)))
 
+add_test('word-frequency',
+ifile(itmp, ifasta(
+function()
+    local aas = {'A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H',
+        'I', 'L', 'K', 'F', 'P', 'S', 'T', 'Y', 'V'}
+    local aa = one_of(unPack(aas))
+    local name = shortrand()
+    local description = seq_descr()
+    local dna_seq = h.orf(rr(70, 100))
+    local prot_length = #dna_seq / 3 - 1
+    local codon2count = {}
+    for codon, aa1 in pairs(translation) do
+        if aa1 == aa then
+            codon2count[codon] = 0
+        end
+    end
+    for i = 1, prot_length do
+        local dna_index = (i - 1) * 3 + 1 -- eh, lua
+        local codon = dna_seq:sub(dna_index, dna_index + 2)
+        local aa1 = translation[codon]
+        assert(aa1)
+        if aa1 == aa then
+            codon2count[codon] = codon2count[codon] + 1
+        end
+    end
+    local counts = {}
+    for _, count in pairs(codon2count) do
+        table.insert(counts, count)
+    end
+    local dna1 = h.new_fasta()
+    dna1:add_seq(name, dna_seq, description)
+    local argv = itmp .. ' ' .. aa
+    dna1.cin = argv
+    return dna1, match_numbers_no_order(unPack(counts)),
+        argv, argv
+end)))
+
 return pr12
 
