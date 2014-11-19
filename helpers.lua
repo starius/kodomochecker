@@ -270,6 +270,19 @@ helpers.get_tests = function(prac, name0)
     end
 end
 
+helpers.get_tasks = function(prac)
+    local names_dict = {}
+    for _, v in pairs(prac) do
+        name, funcs = helpers.unPack(v)
+        names_dict[name] = 1
+    end
+    local names_list = {}
+    for name, _ in pairs(names_dict) do
+        table.insert(names_list, name)
+    end
+    return names_list
+end
+
 helpers.ifile = function(fname, f)
     return function()
         local data, checker, _1, _2 = f()
