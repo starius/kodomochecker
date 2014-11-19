@@ -527,5 +527,29 @@ function()
     return prot1, match_fasta(prot2), argv, argv
 end)))))
 
+add_test('calc-mass',
+ifile(itmp, ifasta(
+function()
+    local aa_masses = require 'aa_masses'
+    local name = shortrand()
+    local description = seq_descr()
+    local _, base_prot = h.orf(rr(15, 20))
+    local base_prot1 = base_prot:gsub('%*', '')
+    local mass_total = 0
+    for i = 1, #base_prot1 do
+        local aa = base_prot1:sub(i, i)
+        local aa_mass = aa_masses[aa]
+        assert(aa_mass)
+        mass_total = mass_total + aa_mass
+    end
+    local h2o = 18
+    mass_total = mass_total - (#base_prot1 - 1) * h2o
+    local prot1 = h.new_fasta()
+    prot1:add_seq(name, base_prot, description)
+    local argv = itmp
+    prot1.cin = argv
+    return prot1, match_number(mass_total), argv, argv
+end)))
+
 return pr12
 
