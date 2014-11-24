@@ -465,7 +465,8 @@ function()
                 count = count + 1
             end
         end
-        if count >= 2 then
+        if count >= 2 + 1 then
+            -- 2 others + 1 me
             prot2:add_seq(name, seq, prot1.name2desc[name])
         end
     end
