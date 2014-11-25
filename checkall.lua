@@ -7,7 +7,7 @@ local sh = require('sh')
 
 local unPack = unpack or table.unpack
 
-excel = {}
+local excel = {}
 
 local fiseen = {}
 
