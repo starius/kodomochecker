@@ -96,6 +96,18 @@ checkall.checkall = function(prac, N)
     end
 end
 
+checkall.score_of = function(stud, mnem)
+    local key = stud .. '|' .. mnem
+    local score = 0
+    if not nopy[key] then
+        score = 1
+    end
+    if excel[key] == true then
+        score = 3 + pep8ok[key]
+    end
+    return score
+end
+
 checkall.print_results = function(prac)
     local header = 'login'
     for _, mnem_and_task in ipairs(prac) do
@@ -107,15 +119,7 @@ checkall.print_results = function(prac)
         local line = stud
         for _, mnem_and_task in ipairs(prac) do
             local mnem, task = unPack(mnem_and_task)
-            local key = stud .. '|' .. mnem
-            local score = 0
-            if not nopy[key] then
-                score = 1
-            end
-            if excel[key] == true then
-                score = 3 + pep8ok[key]
-            end
-            line = line .. '\t' .. score
+            line = line .. '\t' .. checkall.score_of(stud, mnem)
         end
         print(line)
     end
