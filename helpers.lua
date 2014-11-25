@@ -511,7 +511,9 @@ helpers.fasta_equal = function(fasta1, fasta2)
             return false, 'Последовательность ' .. name ..
                 ' отличается'
         end
-        if name2desc1[name] ~= name2desc2[name] then
+        local desc1 = name2desc1[name] or ''
+        local desc2 = name2desc2[name] or ''
+        if desc1 ~= desc2 then
             return false, 'Описание последовательности ' ..
                 name .. ' отличается'
         end
