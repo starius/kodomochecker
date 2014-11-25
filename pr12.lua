@@ -248,7 +248,7 @@ end)))))
 
 add_test('dna-consensus',
 ifile(itmp, ifasta(
-ofile('output.fasta', ofasta(
+ofile('consensus.fasta', ofasta(
 function()
     local prot_l = rr(20, 40)
     local dna_l = prot_l * 3 + 3
@@ -271,7 +271,7 @@ end)))))
 
 add_test('protein-consensus',
 ifile(itmp, ifasta(
-ofile('output.fasta', ofasta(
+ofile('consensus.fasta', ofasta(
 function()
     local prot_l = rr(20, 40)
     local dna_l = prot_l * 3 + 3
