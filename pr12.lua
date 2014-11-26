@@ -53,14 +53,14 @@ function()
     local frame = rr(0, 2)
     local min_length = rr(20, 100)
     local n = rr(1, 10)
-    local dna = h.new_fasta()
-    local protein = h.new_fasta()
-    local dna_name = shortrand()
-    local protein_name_base = dna_name .. '_protein_'
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    local dna1_name = shortrand()
+    local dna2_name_base = dna1_name .. '_'
     local description = seq_descr()
-    local dna_seq = ''
+    local dna1_seq = ''
     local add_dna = function(t)
-        dna_seq = dna_seq .. t
+        dna1_seq = dna1_seq .. t
     end
     -- add junk to shift to target frame
     add_dna(atgc_rand(frame))
@@ -79,10 +79,8 @@ function()
             local dna, aaa = h.orf(l, true)
             add_dna(dna)
             --
-            local protein_name = protein_name_base .. i
-            protein.name2seq[protein_name] = aaa
-            protein.name2desc[protein_name] = ''
-            table.insert(protein.names, protein_name)
+            local dna2_name = dna2_name_base .. i
+            dna2:add_seq(dna2_name, dna, '')
             i = i + 1
         elseif state == 13 then
             local l = rr(1, min_length - 1)
@@ -96,12 +94,10 @@ function()
             break
         end
     end
-    dna.name2seq[dna_name] = dna_seq
-    dna.name2desc[dna_name] = description
-    table.insert(dna.names, dna_name)
+    dna1:add_seq(dna1_name, dna1_seq, description)
     local argv = itmp .. ' ' .. frame .. ' ' .. min_length
-    dna.cin = argv
-    return dna, match_fasta(protein), argv, argv
+    dna1.cin = argv
+    return dna1, match_fasta(dna2), argv, argv
 end)))))
 
 add_test('find-fixed-palindromes',
