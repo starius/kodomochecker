@@ -73,13 +73,13 @@ function()
     local prot2 = h.new_fasta()
     for _, name in ipairs(prot1.names) do
         local seq = prot1.name2seq[name]
-        local count = 0
+        local good = true
         for _, seq1 in ipairs(seqs) do
             if seq1:find(seq) and seq1 ~= seq then
-                count = count + 1
+                good = false
             end
         end
-        if count == 1 then
+        if good then
             -- only me
             prot2:add_seq(name, seq, prot1.name2desc[name])
         end
