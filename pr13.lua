@@ -60,16 +60,14 @@ function()
         if rr(1, 2) == 1 or i < 5 then
             local _, prot_seq = h.orf(rr(15, 30))
             seq = prot_seq:sub(1, -4)
+        elseif rr(1, 2) == 1 then
+            seq = one_of(unPack(seqs))
         else
             local s1 = one_of(unPack(seqs))
             local s2 = one_of(unPack(seqs))
             seq = s1 .. s2
         end
         prot1:add_seq(name, seq, description)
-        if rr(1, 2) == 1 then
-            -- one sequence two times
-            prot1:add_seq(name .. 'ops', seq, description)
-        end
         table.insert(seqs, seq)
     end
     local prot2 = h.new_fasta()
