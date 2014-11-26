@@ -246,7 +246,7 @@ add_test('dna-consensus',
 ifile(itmp, ifasta(
 ofile('consensus.fasta', ofasta(
 function()
-    local prot_l = rr(20, 40)
+    local prot_l = rr(20, 140)
     local dna_l = prot_l * 3 + 3
     local base_dna = h.orf(prot_l)
     local n = rr(5, 10)
@@ -269,7 +269,7 @@ add_test('protein-consensus',
 ifile(itmp, ifasta(
 ofile('consensus.fasta', ofasta(
 function()
-    local prot_l = rr(20, 40)
+    local prot_l = rr(20, 140)
     local dna_l = prot_l * 3 + 3
     local _, base_prot = h.orf(prot_l)
     base_prot = base_prot:sub(1, -2) -- remove *
