@@ -485,12 +485,12 @@ function()
     local seen = {}
     for i = 1, #dna_seq - length + 1 do
         local slice = dna_seq:sub(i, i + length - 1)
-        if seen[slice] == true then
+        if seen[slice] == 1 then
             local name = 'rep_' .. j
             dna2:add_seq(name, slice)
             j = j + 1
         end
-        seen[slice] = true
+        seen[slice] = (seen[slice] or 0) + 1
     end
     dna1:add_seq(dna_name, dna_seq, description)
     local argv = itmp .. ' ' .. length
