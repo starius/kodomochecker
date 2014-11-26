@@ -459,11 +459,11 @@ function()
         local seq = prot1.name2seq[name]
         local count = 0
         for _, seq1 in ipairs(seqs) do
-            if seq1:find(seq) and seq1 ~= seq then
+            if seq1:find(seq) then
                 count = count + 1
             end
         end
-        if count >= 2 then
+        if count >= 2 + 1 then
             -- 2 others + 1 me
             prot2:add_seq(name, seq, prot1.name2desc[name])
         end
