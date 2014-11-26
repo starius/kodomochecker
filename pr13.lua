@@ -66,6 +66,10 @@ function()
             seq = s1 .. s2
         end
         prot1:add_seq(name, seq, description)
+        if rr(1, 2) == 1 then
+            -- one sequence two times
+            prot1:add_seq(name .. 'ops', seq, description)
+        end
         table.insert(seqs, seq)
     end
     local prot2 = h.new_fasta()
@@ -73,7 +77,7 @@ function()
         local seq = prot1.name2seq[name]
         local count = 0
         for _, seq1 in ipairs(seqs) do
-            if seq1:find(seq) then
+            if seq1:find(seq) and seq1 ~= seq then
                 count = count + 1
             end
         end
