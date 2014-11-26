@@ -66,7 +66,13 @@ for a, aaa in pairs(map1to3) do
         return a:upper(), match_choice(aaa, all_aaa)
     end)
     add_test('three-and-one', function()
-        return aaa, match_choice(a, all_a)
+        return aaa,
+        function(text0)
+            -- get only last upper char
+            local text = text0:gsub('[^%u]', ''):sub(-1, -1)
+            local ok, message = match_choice(a, all_a)(text)
+            return ok, message, text0
+        end
     end)
 end
 
