@@ -94,11 +94,7 @@ checkone.checkfile = function(py, task)
     for fi, func in ipairs(task) do
         local ok, m1, m2, task_in, task_out =
             checkpy(func, py)
-        if ok then
-            local p8 = checkone.pep8(py)
-            local p8st, p8rep = unPack(p8)
-            return true, p8rep, p8st
-        else
+        if not ok then
             local m = m1
             if m2 ~= 'none' then
                 m = m .. '\nРазъяснение: ' .. m2
@@ -108,6 +104,9 @@ checkone.checkfile = function(py, task)
             return false, report, fi
         end
     end
+    local p8 = checkone.pep8(py)
+    local p8st, p8rep = unPack(p8)
+    return true, p8rep, p8st
 end
 
 checkone.checkone = function(prac, stud, mnem0, set_result)
