@@ -296,6 +296,10 @@ helpers.ifile = function(fname, f)
         else
             error()
         end
+        if fname:sub(1, 1) ~= '/' then
+            local checkpy = require 'checkpy'
+            fname = checkpy.tmpdir_fname .. '/' .. fname
+        end
         helpers.write_file(fname, text)
         return cin, checker, text .. '\n\n' .. cin, _2
     end
