@@ -23,9 +23,15 @@ checkpy.checkpy = function(task, py)
     tmpin:close()
     --
     local py_basename = py:gsub('.*/', '')
-    local new_py = checkpy.tmpdir_fname .. '/' .. py_basename
-    os.execute(pf('cp %s %s', py, new_py))
-    local cmd0 = pf('python %s %s < %s > %s 2>&1', py, argv,
+    local new_py
+    if py:sub(1, 1) == '/' then
+        -- py is absolute path
+        new_py = py
+    else
+        -- py is relative path: prepend `pwd`
+        new_py = helpers.pwd() .. '/' .. py
+    end
+    local cmd0 = pf('python %s %s < %s > %s 2>&1', new_py, argv,
         checkpy.tmpin_fname, checkpy.tmpout_fname)
     local cmd = pf('cd %s && %s', checkpy.tmpdir_fname, cmd0)
     local sh_script = checkpy.tmpdir_fname .. '/' .. '1.sh'

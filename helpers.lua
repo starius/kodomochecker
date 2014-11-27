@@ -762,5 +762,14 @@ helpers.tmp_file_and_deleter = function()
     return tmpname, deleter
 end
 
+helpers.pwd = function()
+    if not helpers._pwd then
+        local pwd = io.popen('pwd')
+        helpers._pwd = pwd:read('*l')
+        pwd:close()
+    end
+    return helpers._pwd
+end
+
 return helpers
 
