@@ -55,6 +55,8 @@ ofile('output.fasta', ofasta(
 function()
     local frame = rr(0, 2)
     local min_length = rr(20, 100)
+    local min_length_protein = min_length
+    local min_length_dna = min_length_protein * 3 + 3
     local n = rr(1, 10)
     local dna1 = h.new_fasta()
     local dna2 = h.new_fasta()
@@ -98,7 +100,7 @@ function()
         end
     end
     dna1:add_seq(dna1_name, dna1_seq, description)
-    local argv = itmp .. ' ' .. frame .. ' ' .. min_length
+    local argv = itmp .. ' ' .. frame .. ' ' .. min_length_dna
     dna1.cin = argv
     return dna1, match_fasta(dna2), argv, argv
 end)))))
