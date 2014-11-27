@@ -305,7 +305,9 @@ helpers.ofile = function(fname, f)
     return function()
         local text, checker, _1, _2 = f()
         return text, function()
-            local out = helpers.read_file(fname)
+            local checkpy = require 'checkpy'
+            local fname1 = checkpy.tmpdir_fname .. '/' .. fname
+            local out = helpers.read_file(fname1)
             local ok, message = checker(out)
             return ok, message, out
         end, _1, _2
