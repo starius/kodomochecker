@@ -4,10 +4,12 @@ local checkpy = require('checkpy').checkpy
 local helpers = require('helpers')
 
 local sh = require('sh')
+local h = require('helpers')
 
 local unPack = unpack or table.unpack
 
-pep8out_fname = os.tmpname()
+local pep8out_fname, pep8out_fname_d = h.tmp_file_and_deleter()
+checkone.pep8out_fname_d = pep8out_fname_d
 
 checkone.pep8 = function(py)
     if not checkone.pep8res then

@@ -42,9 +42,12 @@ local add_test = function(name, func)
 end
 
 
-local itmp = os.tmpname()
-local itmp2 = os.tmpname()
-local otmp = os.tmpname()
+local itmp, itmp_d = h.tmp_file_and_deleter()
+pr12.itmp_d = itmp_d
+local itmp2, itmp2_d = h.tmp_file_and_deleter()
+pr12.itmp2_d = itmp2_d
+local otmp, otmp_d = h.tmp_file_and_deleter()
+pr12.otmp_d = otmp_d
 
 add_test('find-orfs-in-frame',
 ifile(itmp, ifasta(

@@ -43,8 +43,8 @@ local add_test = function(name, func)
     add_test0(pr13, name, func)
 end
 
-
-local itmp = os.tmpname()
+local itmp, itmp_d = h.tmp_file_and_deleter()
+pr13.itmp_d = itmp_d
 
 add_test('find-subseqs',
 ifile(itmp, ifasta(

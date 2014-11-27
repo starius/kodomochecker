@@ -1,15 +1,20 @@
 local checkpy = {}
 
 local helpers = require('helpers')
+local h = helpers
 
 local pf = string.format
 
 checkpy.checkpy = function(task, py)
     if not checkpy.tmpin_fname then
-        checkpy.tmpin_fname = os.tmpname()
+        local fname, d = h.tmp_file_and_deleter()
+        checkpy.tmpin_fname = fname
+        checkpy.tmpin_fname_d = d
     end
     if not checkpy.tmpout_fname then
-        checkpy.tmpout_fname = os.tmpname()
+        local fname, d = h.tmp_file_and_deleter()
+        checkpy.tmpout_fname = fname
+        checkpy.tmpout_fname_d = d
     end
     local task_in, task_check, task_in_repr, argv = task()
     task_in_repr = task_in_repr or argv or task_in

@@ -736,5 +736,23 @@ end
 
 assert(helpers.translate('ATGTAA') == 'M*')
 
+helpers.tmp_file_and_deleter = function()
+    local tmpname = os.tmpname()
+    local deleter = {}
+    local Deleter = {
+        __gc = function(self)
+            os.execute('rm -rf ' .. tmpname)
+        end,
+    }
+    setmetatable(deleter, Deleter)
+    if newproxy then
+        -- Lua 5.1 workaround
+        -- tables in Lua 5.1 can't have finalizers
+        deleter.newproxy = newproxy(true)
+        getmetatable(deleter.newproxy).__gc = Deleter.__gc
+    end
+    return tmpname, deleter
+end
+
 return helpers
 

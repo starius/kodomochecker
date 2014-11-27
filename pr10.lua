@@ -278,8 +278,10 @@ function()
     return dna, match_fasta(protein)
 end)))))
 
-local itmp = os.tmpname()
-local otmp = os.tmpname()
+local itmp, itmp_d = h.tmp_file_and_deleter()
+pr10.itmp_d = itmp_d
+local otmp, otmp_d = h.tmp_file_and_deleter()
+pr10.otmp_d = otmp_d
 
 -- filter-palindrome
 add_test('filter-palindrome',
