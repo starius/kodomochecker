@@ -25,7 +25,7 @@ checkpy.checkpy = function(task, py)
     local py_basename = py:gsub('.*/', '')
     local new_py = checkpy.tmpdir_fname .. '/' .. py_basename
     os.execute(pf('cp %s %s', py, new_py))
-    local cmd0 = pf('python %s %s < %s > %s 2>&1', new_py, argv,
+    local cmd0 = pf('python %s %s < %s > %s 2>&1', py, argv,
         checkpy.tmpin_fname, checkpy.tmpout_fname)
     local cmd = pf('cd %s && %s', checkpy.tmpdir_fname, cmd0)
     local sh_script = checkpy.tmpdir_fname .. '/' .. '1.sh'
