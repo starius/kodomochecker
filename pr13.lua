@@ -216,6 +216,10 @@ ifile(itmp, ifasta(
 function()
     local word_length = rr(4, 6)
     local seq = atgc_rand(rr(100, 1000))
+    if rr(1, 2) == 1 then
+        seq = 'ACAATCGCATGCGCCTAAAGAGATGAGTCATCCTATTG' ..
+            'AGCCTTGTCCGATGGTATGGGTCAACGAAC'
+    end
     local word2count = {}
     for i = 1, #seq - word_length + 1 do
         local slice = seq:sub(i, i + word_length - 1)
