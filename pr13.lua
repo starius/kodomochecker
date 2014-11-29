@@ -234,7 +234,7 @@ function()
     local result = {}
     for word, count in pairs(word2count) do
         if count == max_count then
-            table.insert(result, word)
+            table.insert(result, word .. '\n')
         end
     end
     local dna = h.new_fasta()
