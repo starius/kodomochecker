@@ -19,7 +19,7 @@ app:post("send", "/send", function(self)
     f:write(file.content)
     f:close()
     --
-    r = io.popen('luajit checkone.lua ' .. fname, 'r')
+    local r = io.popen('luajit checkone.lua ' .. fname, 'r')
     local result = r:read('*a')
     r:close()
     return '<button onclick="window.history.back()">' ..

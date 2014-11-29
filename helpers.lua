@@ -51,7 +51,7 @@ helpers.match_number = function(result)
     end
 end
 
-THRESHOLD = 0.001
+local THRESHOLD = 0.001
 local arr_find_num = function(arr, num, start)
     for i = start, #arr do
         if math.abs(arr[i] - num) <= THRESHOLD then
@@ -247,12 +247,11 @@ helpers.write_file = function(fname, text)
     local f = io.open(fname, 'w')
     f:write(text)
     f:close()
-    return t
 end
 
 helpers.add_test = function(prac, name0, func)
     for _, v in pairs(prac) do
-        name, funcs = helpers.unPack(v)
+        local name, funcs = helpers.unPack(v)
         if name == name0 then
             table.insert(funcs, func)
             return
@@ -263,7 +262,7 @@ end
 
 helpers.get_tests = function(prac, name0)
     for _, v in pairs(prac) do
-        name, funcs = helpers.unPack(v)
+        local name, funcs = helpers.unPack(v)
         if name == name0 then
             return funcs
         end
@@ -273,7 +272,7 @@ end
 helpers.get_tasks = function(prac)
     local names_dict = {}
     for _, v in pairs(prac) do
-        name, funcs = helpers.unPack(v)
+        local name, funcs = helpers.unPack(v)
         names_dict[name] = 1
     end
     local names_list = {}
@@ -461,7 +460,8 @@ function string:split(sep, nMax, plain)
     local aRecord = {}
     if self:len() > 0 then
         nMax = nMax or -1
-        local nField=1 nStart=1
+        local nField=1
+        local nStart=1
         local nFirst,nLast = self:find(sep, nStart, plain)
         while nFirst and nMax ~= 0 do
             aRecord[nField] = self:sub(nStart, nFirst-1)

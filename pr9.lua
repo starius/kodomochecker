@@ -37,7 +37,7 @@ end
 
 local tr_xyz = function(...)
     local abc = {...}
-    ax,ay,bx,by,cx,cy = unPack(abc)
+    local ax,ay,bx,by,cx,cy = unPack(abc)
     return pf('%f %f\n%f %f\n%f %f', ax,ay,bx,by,cx,cy)
 end
 
