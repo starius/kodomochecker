@@ -593,18 +593,29 @@ local roman = {
     [5] = 'V',
 }
 
-for p = 1, 5 do
-    local last = p
-    add_test(pr9, 'lunch-break', function()
-        local first = rr(1, p)
-        return first .. '\n' .. last,
-            match_str(lunch_break[last])
-    end)
-    add_test(pr9, 'lunch-break-roman', function()
-        local first = rr(1, p)
-        return roman[first] .. '\n' .. roman[last],
-            match_str(lunch_break[last])
-    end)
+local all_lunchs = {}
+for _, lunch in pairs(lunch_break) do
+    table.insert(all_lunchs, lunch)
+end
+table.insert(all_lunchs, '14:20-15:35')
+
+for first = 1, 5 do
+    for last = first, 5 do
+        local result
+        if first <= 3 and last >= 4 then
+            result = '14:20-15:35'
+        else
+            result = lunch_break[last]
+        end
+        add_test(pr9, 'lunch-break', function()
+            return first .. '\n' .. last,
+                match_choice(result, all_lunchs)
+        end)
+        add_test(pr9, 'lunch-break-roman', function()
+            return roman[first] .. '\n' .. roman[last],
+                match_choice(result, all_lunchs)
+        end)
+    end
 end
 
 add_test(pr9, 'lunch-break', function()
