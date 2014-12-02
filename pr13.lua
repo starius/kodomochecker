@@ -246,5 +246,54 @@ function()
     return dna, match_strs_no_order(unPack(result)), argv, argv
 end)))
 
+add_test('delete-matching',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    local pattern = atgc_rand(rr(10, 20))
+    local n = rr(10, 15)
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq
+        if rr(1, 2) == 1 then
+            local prefix = atgc_rand(rr(0, 20))
+            local suffix = atgc_rand(rr(0, 20))
+            seq = prefix .. pattern .. suffix
+        else
+            seq = atgc_rand(rr(40, 50))
+        end
+        dna1:add_seq(name, seq, description)
+        if not seq:find(pattern) then
+            dna2:add_seq(name, seq, description)
+        end
+    end
+    local argv = itmp .. ' ' .. pattern
+    dna1.cin = argv
+    return dna1, match_fasta(dna2), argv, argv
+end)))))
+
+add_test('per-seq-gc',
+ifile(itmp, ifasta(
+function()
+    local dna1 = h.new_fasta()
+    local n = rr(10, 15)
+    local result = {}
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq = atgc_rand(rr(10, 15))
+        dna1:add_seq(name, seq, description)
+        local gc_only = seq:gsub('[AT]', '')
+        local gc = #gc_only / #seq
+        table.insert(result, gc)
+    end
+    local argv = itmp
+    dna1.cin = argv
+    return dna1, match_numbers(unPack(result)), argv, argv
+end)))
+
 return pr13
 
