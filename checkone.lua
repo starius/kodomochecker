@@ -67,7 +67,7 @@ local pf = string.format
 checkone.find_py = function(stud, mnem)
     if not checkone.all_files then
         checkone.all_files =
-            sh("find py | egrep '\\.\(py|lua\)$'"):split('\n')
+            sh("find py | egrep '\\.(py|lua)$'"):split('\n')
     end
     mnem = mnem:gsub('%-', '%%%-')
     stud = stud:gsub('%-', '%%%-')
