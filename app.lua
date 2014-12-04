@@ -22,9 +22,9 @@ app:post("send", "/send", function(self)
     local r = io.popen('luajit checkone.lua ' .. fname, 'r')
     local result = r:read('*a')
     r:close()
-    return '<button onclick="window.history.back()">' ..
-    'Go back</button>' ..
-    '<pre>' .. result .. '</pre>'
+    return ([[<h2>Файл %s</h2>
+    <button onclick="window.history.back()">Go back</button>
+    <pre>%s</pre>]]):format(file.filename, result)
 end)
 
 return app
