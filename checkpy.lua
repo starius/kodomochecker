@@ -31,7 +31,12 @@ checkpy.checkpy = function(task, py)
         -- py is relative path: prepend `pwd`
         new_py = helpers.pwd() .. '/' .. py
     end
-    local cmd0 = pf('python %s %s < %s > %s 2>&1', new_py, argv,
+    local interpreter = 'python'
+    if new_py:find('lua$') then
+        interpreter = 'luajit'
+    end
+    local cmd0 = pf('%s %s %s < %s > %s 2>&1',
+        interpreter, new_py, argv,
         checkpy.tmpin_fname, checkpy.tmpout_fname)
     local cmd = pf('cd %s && %s', checkpy.tmpdir_fname, cmd0)
     local sh_script = checkpy.tmpdir_fname .. '/' .. '1.sh'
@@ -43,7 +48,7 @@ checkpy.checkpy = function(task, py)
     local task_out = tmpout:read('*a')
     tmpout:close()
     if not run_ok then
-        return false, 'ошибка в коде (python)', 'none',
+        return false, 'ошибка в программа', 'none',
             task_in_repr, task_out
     end
     local ok, message, task_out_repr = task_check(task_out)

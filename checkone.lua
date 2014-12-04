@@ -12,6 +12,9 @@ local pep8out_fname, pep8out_fname_d = h.tmp_file_and_deleter()
 checkone.pep8out_fname_d = pep8out_fname_d
 
 checkone.pep8 = function(py)
+    if py:find('lua$') then
+        return {2, ''}
+    end
     if not checkone.pep8res then
         checkone.pep8res = {}
     end
@@ -64,13 +67,14 @@ local pf = string.format
 checkone.find_py = function(stud, mnem)
     if not checkone.all_files then
         checkone.all_files =
-            sh("find py | grep '\\.py$'"):split('\n')
+            sh("find py | egrep '\\.\(py|lua\)$'"):split('\n')
     end
     mnem = mnem:gsub('%-', '%%%-')
     stud = stud:gsub('%-', '%%%-')
     for _, py in ipairs(checkone.all_files) do
         if py:match(stud .. '/') and
-                py:match('_' .. mnem .. '.py') then
+                (py:match('_' .. mnem .. '.py') or
+                 py:match('_' .. mnem .. '.lua')) then
             return py
         end
     end
@@ -138,11 +142,15 @@ if not pcall(debug.getlocal, 4, 1) then
         print('No Python script provided')
         error()
     end
-    local py_pattern = '_(%w+)_([%w-]+).py$'
-    local pr_name, mnem0 = py:match(py_pattern)
     if not py then
         print('Wrong script name. Format: student_prac_task.py')
         error()
+    end
+    local py_pattern = '_(%w+)_([%w-]+).py$'
+    local pr_name, mnem0 = py:match(py_pattern)
+    if not pr_name then
+        local lua_pattern = '_(%w+)_([%w-]+).lua$'
+        pr_name, mnem0 = py:match(lua_pattern)
     end
     if pr_name ~= 'pr8' and pr_name ~= 'pr9'
             and pr_name ~= 'pr10' and pr_name ~= 'pr11'
