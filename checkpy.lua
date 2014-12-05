@@ -45,7 +45,7 @@ checkpy.checkpy = function(task, py)
     local run_ok = helpers.execute(sh_script)
     --
     local tmpout = io.open(checkpy.tmpout_fname, 'r')
-    local task_out = tmpout:read('*a')
+    local task_out = tmpout:read(1000000) -- max 1M
     tmpout:close()
     if not run_ok then
         return false, 'ошибка в программа', 'none',
