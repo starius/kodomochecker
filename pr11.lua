@@ -96,10 +96,9 @@ add_test('urllib2', function()
         input, input
 end)
 
-local itmp, itmp_d = h.tmp_file_and_deleter()
-pr11.itmp_d = itmp_d
-local otmp, otmp_d = h.tmp_file_and_deleter()
-pr11.otmp_d = otmp_d
+local checkpy = require('checkpy')
+local itmp = checkpy.tmp_dir() .. '/pr11i-' .. shortrand()
+local otmp = checkpy.tmp_dir() .. '/pr11o-' .. shortrand()
 
 -- translation-in-frame
 add_test('translation-in-frame-argv',

@@ -2,19 +2,26 @@ local checkpy = {}
 
 local helpers = require('helpers')
 local h = helpers
+local runner = require('config').runner
 
 local pf = string.format
 
-checkpy.checkpy = function(task, py)
+checkpy.tmp_dir = function()
     if not checkpy.tmpdir_fname then
         local fname, d = h.tmp_file_and_deleter()
         checkpy.tmpdir_fname = fname
         checkpy.tmpdir_fname_d = d
         os.execute('rm ' .. fname)
         os.execute('mkdir ' .. fname)
+        os.execute('chmod 777 ' .. fname)
         checkpy.tmpin_fname = fname .. '/' .. 'input.file'
         checkpy.tmpout_fname = fname .. '/' .. 'output.file'
     end
+    return checkpy.tmpdir_fname
+end
+
+checkpy.checkpy = function(task, py)
+    checkpy.tmp_dir()
     local task_in, task_check, task_in_repr, argv = task()
     task_in_repr = task_in_repr or argv or task_in
     argv = argv or ''
@@ -38,11 +45,16 @@ checkpy.checkpy = function(task, py)
     local cmd0 = pf('%s %s %s < %s > %s 2>&1',
         interpreter, new_py, argv,
         checkpy.tmpin_fname, checkpy.tmpout_fname)
-    local cmd = pf('cd %s && %s', checkpy.tmpdir_fname, cmd0)
-    local sh_script = checkpy.tmpdir_fname .. '/' .. '1.sh'
+    local cmd = pf('cd %s && %s', checkpy.tmp_dir(), cmd0)
+    local sh_script = checkpy.tmp_dir() .. '/' .. '1.sh'
     h.write_file(sh_script, cmd)
     os.execute('chmod +x ' .. sh_script)
-    local run_ok = helpers.execute(sh_script)
+    local run_ok
+    if runner then
+        run_ok = helpers.execute(runner:format(sh_script))
+    else
+        run_ok = helpers.execute(sh_script)
+    end
     --
     local tmpout = io.open(checkpy.tmpout_fname, 'r')
     local task_out = tmpout:read(1000000) or '' -- max 1M
