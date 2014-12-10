@@ -295,5 +295,56 @@ function()
     return dna1, match_numbers(unPack(result)), argv, argv
 end)))
 
+add_test('per-seq-matching',
+ifile(itmp, ifasta(
+function()
+    local pattern = atgc_rand(rr(10, 20))
+    local dna1 = h.new_fasta()
+    local n = rr(10, 15)
+    local result = {}
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq
+        if rr(1, 2) == 1 then
+            seq = atgc_rand(rr(1, 50)) .. pattern .. atgc_rand(rr(1, 50))
+        else
+            seq = atgc_rand(rr(10, 100))
+        end
+        dna1:add_seq(name, seq, description)
+        local yesno = seq:find(pattern, 1, true) and 'yes' or 'no'
+        table.insert(result, name)
+        table.insert(result, yesno)
+    end
+    local argv = itmp .. ' ' .. pattern
+    dna1.cin = argv
+    return dna1, match_strs(unPack(result)), argv, argv
+end)))
+
+add_test('filter-long',
+ifile(itmp, ifasta(
+ofile('output.fasta', ofasta(
+function()
+    local dna1 = h.new_fasta()
+    local dna2 = h.new_fasta()
+    local min_protein = rr(20, 40)
+    local n = rr(10, 15)
+    for i = 1, n do
+        local name = shortrand() .. i
+        local description = seq_descr()
+        local seq
+        if rr(1, 2) == 1 then
+            seq = h.orf(rr(min_protein, min_protein * 2))
+            dna2:add_seq(name, seq, description)
+        else
+            seq = h.orf(rr(min_protein - 10, min_protein - 1))
+        end
+        dna1:add_seq(name, seq, description)
+    end
+    local argv = itmp .. ' ' .. min_protein
+    dna1.cin = argv
+    return dna1, match_fasta(dna2), argv, argv
+end)))))
+
 return pr13
 
