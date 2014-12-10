@@ -300,7 +300,7 @@ ifile(itmp, ifasta(
 function()
     local pattern = atgc_rand(rr(10, 20))
     local dna1 = h.new_fasta()
-    local n = rr(10, 15)
+    local n = rr(5, 10)
     local result = {}
     for i = 1, n do
         local name = shortrand() .. i
@@ -328,7 +328,7 @@ function()
     local dna1 = h.new_fasta()
     local dna2 = h.new_fasta()
     local min_protein = rr(20, 40)
-    local n = rr(10, 15)
+    local n = rr(5, 10)
     for i = 1, n do
         local name = shortrand() .. i
         local description = seq_descr()
