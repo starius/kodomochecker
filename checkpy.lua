@@ -60,7 +60,7 @@ checkpy.checkpy = function(task, py)
     local task_out = tmpout:read(1000000) or '' -- max 1M
     tmpout:close()
     if not run_ok then
-        return false, 'ошибка в программа', 'none',
+        return false, 'ошибка в программе', 'none',
             task_in_repr, task_out
     end
     local ok, message, task_out_repr = task_check(task_out)
