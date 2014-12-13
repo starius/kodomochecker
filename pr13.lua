@@ -346,5 +346,45 @@ function()
     return dna1, match_fasta(dna2), argv, argv
 end)))))
 
+add_test('count-atgc',
+ifile(itmp, ifasta(
+function()
+    local dna1 = h.new_fasta()
+    local atgc = {A = 0, T = 0, G = 0, C = 0}
+    local name = shortrand()
+    local seq = atgc_rand(rr(4, 40))
+    for j = 1, #seq do
+        local letter = seq:sub(j, j)
+        atgc[letter] = atgc[letter] + 1
+    end
+    dna1:add_seq(name, seq)
+    local argv = itmp
+    dna1.cin = argv
+    return dna1, match_numbers(atgc.A, atgc.T, atgc.G, atgc.C),
+        argv, argv
+end)))
+
+add_test('max-minus-min',
+ifile(itmp, ifasta(
+function()
+    local dna1 = h.new_fasta()
+    local n = rr(5, 10)
+    local MAX = 30
+    local MIN = 10
+    local min = MAX
+    local max = MIN
+    for i = 1, n do
+        local name = shortrand() .. i
+        local l = rr(MIN, MAX)
+        min = math.min(min, l)
+        max = math.max(max, l)
+        local seq = atgc_rand(l)
+        dna1:add_seq(name, seq)
+    end
+    local argv = itmp
+    dna1.cin = argv
+    return dna1, match_number(max - min), argv, argv
+end)))
+
 return pr13
 
