@@ -360,7 +360,8 @@ function()
     dna1:add_seq(name, seq)
     local argv = itmp
     dna1.cin = argv
-    return dna1, match_numbers(atgc.A, atgc.T, atgc.G, atgc.C),
+    return dna1,
+        match_numbers_no_order(atgc.A, atgc.T, atgc.G, atgc.C),
         argv, argv
 end)))
 
