@@ -92,7 +92,7 @@ end)))))
 add_test('count-hits',
 ifile(itmp, ifasta(
 function()
-    local pattern = atgc_rand(rr(6, 16))
+    local pattern = atgc_rand(rr(6, 116))
     local dna = h.new_fasta()
     local n = rr(10, 100)
     local result = 0
@@ -104,6 +104,9 @@ function()
             local prefix = atgc_rand(rr(0, 20))
             local suffix = atgc_rand(rr(0, 20))
             seq = prefix .. pattern .. suffix
+            if rr(1, 2) == 1 then
+                seq = seq .. seq
+            end
         else
             seq = atgc_rand(rr(10, 50))
         end
