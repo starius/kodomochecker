@@ -46,15 +46,22 @@ checkpy.checkpy = function(task, py)
         interpreter, new_py, argv,
         checkpy.tmpin_fname, checkpy.tmpout_fname)
     if new_py:find('%.c$') then
-        local exe = new_py .. '.exe'
-        cmd0 = pf([[(
-                if [ ! -f %s ]; then cc %s -o %s; fi
-                    ) &&
-                %s %s < %s > %s 2>&1]],
-            exe, new_py, exe, exe, argv,
+        local exe = checkpy.tmp_dir() .. '/app.exe'
+        -- FIXME PATH hardcoded
+        cmd0 = pf([[
+            ( if [ ! -f %s ]; then
+        PATH=$PATH:/usr/lib/gcc/x86_64-linux-gnu/4.7/
+        gcc %s -o %s 2> %s;
+            fi )
+        &&
+        %s %s < %s > %s 2>&1]],
+            exe, new_py, exe, checkpy.tmpout_fname,
+            exe, argv,
             checkpy.tmpin_fname, checkpy.tmpout_fname)
+        :gsub('\n', ' ')
     end
-    local cmd = pf('cd %s && %s', checkpy.tmp_dir(), cmd0)
+    local cmd = pf('cd %s && %s',
+        checkpy.tmp_dir(), cmd0)
     local sh_script = checkpy.tmp_dir() .. '/' .. '1.sh'
     h.write_file(sh_script, cmd)
     os.execute('chmod +x ' .. sh_script)
