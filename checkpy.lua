@@ -45,6 +45,15 @@ checkpy.checkpy = function(task, py)
     local cmd0 = pf('%s %s %s < %s > %s 2>&1',
         interpreter, new_py, argv,
         checkpy.tmpin_fname, checkpy.tmpout_fname)
+    if new_py:find('%.c$') then
+        local exe = new_py .. '.exe'
+        cmd0 = pf([[(
+                if [ ! -f %s ]; then cc %s -o %s; fi
+                    ) &&
+                %s %s < %s > %s 2>&1]],
+            exe, new_py, exe, exe, argv,
+            checkpy.tmpin_fname, checkpy.tmpout_fname)
+    end
     local cmd = pf('cd %s && %s', checkpy.tmp_dir(), cmd0)
     local sh_script = checkpy.tmp_dir() .. '/' .. '1.sh'
     h.write_file(sh_script, cmd)

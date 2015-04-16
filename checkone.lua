@@ -15,6 +15,9 @@ checkone.pep8 = function(py)
     if py:find('lua$') then
         return {2, ''}
     end
+    if py:find('%.c$') then
+        return {2, ''}
+    end
     if not checkone.pep8res then
         checkone.pep8res = {}
     end
@@ -67,14 +70,15 @@ local pf = string.format
 checkone.find_py = function(stud, mnem)
     if not checkone.all_files then
         checkone.all_files =
-            sh("find py | egrep '\\.(py|lua)$'"):split('\n')
+            sh("find py | egrep '\\.(py|lua|c)$'"):split('\n')
     end
     mnem = mnem:gsub('%-', '%%%-')
     stud = stud:gsub('%-', '%%%-')
     for _, py in ipairs(checkone.all_files) do
         if py:match(stud .. '/') and
                 (py:match('_' .. mnem .. '.py') or
-                 py:match('_' .. mnem .. '.lua')) then
+                 py:match('_' .. mnem .. '.lua') or
+                 py:match('_' .. mnem .. '.c')) then
             return py
         end
     end
@@ -151,6 +155,10 @@ if not pcall(debug.getlocal, 4, 1) then
     if not pr_name then
         local lua_pattern = '_(%w+)_([%w-]+).lua$'
         pr_name, mnem0 = py:match(lua_pattern)
+    end
+    if not pr_name then
+        local c_pattern = '_(%w+)_([%w-]+).c$'
+        pr_name, mnem0 = py:match(c_pattern)
     end
     if pr_name ~= 'pr8' and pr_name ~= 'pr9'
             and pr_name ~= 'pr10' and pr_name ~= 'pr11'
