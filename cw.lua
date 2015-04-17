@@ -236,6 +236,16 @@ add_test('staircase', function()
     1 3 1]], match_number(2)
 end)
 
+add_test('staircase', function()
+    return [[1
+    5]], match_number(5)
+end)
+
+add_test('staircase', function()
+    return [[2
+    1 7]], match_number(7)
+end)
+
 local function solveStaircase(price)
     local ans = {price[1], price[2]}
     for i = 3, #price do
