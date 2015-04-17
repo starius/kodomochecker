@@ -136,7 +136,7 @@ add_test('max', function()
     return a .. '\n' .. b, match_number(math.max(a, b))
 end)
 
-local function examCheck(nExp)
+local function examCheck(nExp, nMax)
     return function(out)
         local numbers = {}
         for i in out:gmatch('%d+') do
@@ -153,6 +153,18 @@ local function examCheck(nExp)
                 Задекларировано %d, а ожидалось %d]])
                 :format(n, nExp)
         end
+        local seen = {}
+        for _, stud in ipairs(numbers) do
+            if stud < 1 or stud > nMax then
+                return false, ([[Недопустимый номер студента:
+                    %d]]):format(stud)
+            end
+            if seen[stud] then
+                return false, ([[Студент с номером %d
+                    указан дважды]]):format(stud)
+            end
+            seen[stud] = true
+        end
         for i = 2, n do
             if math.abs(numbers[i] - numbers[i - 1]) <= 1 then
                 return false, ([[Студенты с номерами %d и %d
@@ -166,24 +178,24 @@ local function examCheck(nExp)
 end
 
 add_test('exam', function()
-    return 1, examCheck(1)
+    return 1, examCheck(1, 1)
 end)
 
 add_test('exam', function()
-    return 2, examCheck(1)
+    return 2, examCheck(1, 2)
 end)
 
 add_test('exam', function()
-    return 3, examCheck(2)
+    return 3, examCheck(2, 3)
 end)
 
 add_test('exam', function()
-    return 4, examCheck(4)
+    return 4, examCheck(4, 4)
 end)
 
 add_test('exam', function()
     local n = math.random(5, 5000)
-    return n, examCheck(n)
+    return n, examCheck(n, n)
 end)
 
 add_test('path', function()
