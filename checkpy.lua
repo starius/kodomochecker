@@ -51,7 +51,7 @@ checkpy.checkpy = function(task, py)
         cmd0 = pf([[
             ( if [ ! -f %s ]; then
         PATH=$PATH:/usr/lib/gcc/x86_64-linux-gnu/4.7/
-        gcc %s -o %s 2> %s;
+        gcc %s -o %s -lm 2> %s;
             fi )
         &&
         %s %s < %s > %s 2>&1]],
