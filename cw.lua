@@ -307,7 +307,7 @@ local function solveClique(x, w)
 end
 
 add_test('clique', function()
-    local n = math.random(1, 200000)
+    local n = math.random(1, 20000)
     local x = {}
     local w = {}
     local as_text = {}
