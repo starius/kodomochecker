@@ -1,3 +1,5 @@
+-- Problems: http://kodomo.fbb.msu.ru/wiki/Main/LuaAndC/cw
+
 local sh = require("sh")
 local pf = string.format
 local rr = math.random
