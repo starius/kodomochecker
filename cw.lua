@@ -265,6 +265,40 @@ add_test('staircase', function()
         match_number(result)
 end)
 
+add_test('staircase2', function()
+    return [[9 3
+    100 100 4 200 300 6 55 10 1]], match_number(11)
+end)
+
+local function solveStaircase2(price, m)
+    local binaryheap = require 'binaryheap'
+    local h = binaryheap.minUnique()
+    h:insert(0, 's' .. 0)
+    for i = 1, #price do
+        local removed_step = i - m - 1
+        if removed_step >= 0 then
+            assert(h:remove('s' .. removed_step))
+        end
+        local min = h:peek()
+        h:insert(min + price[i], 's' .. i)
+    end
+    local last_pos = h['s' .. #price]
+    return h[last_pos].value
+end
+
+add_test('staircase2', function()
+    local n = math.random(1000000, 2000000)
+    local m = math.random(100000, 200000)
+    local price = {}
+    for i = 1, n do
+        table.insert(price, math.random(1, 100))
+    end
+    local result = solveStaircase2(price, m)
+    return ("%d %d\n%s"):format(n, m,
+            table.concat(price, ' ')),
+        match_number(result)
+end)
+
 add_test('clique', function()
     return [[4
     2 3
