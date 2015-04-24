@@ -295,6 +295,17 @@ add_test('staircase2', function()
     for i = 1, n do
         table.insert(price, math.random(1, 100))
     end
+    for a = 0, math.random(0, 10) do
+        -- increase values of m items
+        local min_value = math.random(10, 100)
+        local start = math.random(1, n - 3 * m)
+        local stop = start + math.random(m, 2 * m)
+        for i = start, stop do
+            if price[i] < min_value then
+                price[i] = math.random(min_value, 100)
+            end
+        end
+    end
     local result = solveStaircase2(price, m)
     return ("%d %d\n%s"):format(n, m,
             table.concat(price, ' ')),
