@@ -477,12 +477,14 @@ local knight_correct = [[
 local it = knight_correct:gmatch('%d+')
 for x = 0, 19 do
     for y = 0, 19 do
-        local result = it()
+        local result = tonumber(it())
+        assert(result == solveKnight(x, y),
+            x .. ' ' .. y .. ' ' .. result .. ' ' ..
+            solveKnight(x, y))
         add_test('knight', function()
             return ("%d %d"):format(x, y),
                 match_number(result)
         end)
-
     end
 end
 
