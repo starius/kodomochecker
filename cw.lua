@@ -370,4 +370,120 @@ add_test('clique', function()
         match_number(result)
 end)
 
+add_test('knight', function()
+    return "0 0", match_number(0)
+end)
+
+add_test('knight', function()
+    return "1 2", match_number(1)
+end)
+
+add_test('knight', function()
+    return "2 1", match_number(1)
+end)
+
+add_test('knight', function()
+    return "3 3", match_number(2)
+end)
+
+add_test('knight', function()
+    return "1 0", match_number(3)
+end)
+
+add_test('knight', function()
+    return "1 1", match_number(4)
+end)
+
+add_test('knight', function()
+    return "1 3", match_number(2)
+end)
+
+add_test('knight', function()
+    return "8 8", match_number(6)
+end)
+
+local function solveKnight(x, y)
+    -- see http://stackoverflow.com/a/26888893
+    if y > x then
+        x, y = y, x
+    end
+    if x == 2 and y == 2 then
+        return 4
+    elseif x == 1 and y == 1 then
+        return 4
+    elseif x == 1 and y == 0 then
+        return 3
+    end
+    if y == 0 or x >= 2 * y then
+        local initX
+        if x % 4 == 0 then
+            initX = math.floor(x / 2)
+        elseif x % 4 == 1 then
+            initX = 1 + math.floor(x / 2)
+        elseif x % 4 == 2 then
+            initX = 1 + math.floor(x / 2)
+        else
+            initX = 1 + math.floor((x + 1) / 2)
+        end
+        if x % 4 > 1 then
+            return initX - (y % 2)
+        else
+            return initX + (y % 2)
+        end
+    else
+        local diagonal = x - math.floor((x - y) / 2)
+        if (x - y) % 2 == 0 then
+            if diagonal % 3 == 0 then
+                return math.floor(diagonal / 3) * 2
+            else
+                return (math.floor(diagonal / 3) * 2) + 2
+            end
+        else
+            return (math.floor(diagonal / 3) * 2) + 1
+        end
+    end
+end
+
+add_test('knight', function()
+    local x = math.random(0, 20000000)
+    local y = math.random(0, 20000000)
+    local result = solveKnight(x, y)
+    return ("%d %d"):format(x, y),
+        match_number(result)
+end)
+
+local knight_correct = [[
+0 3 2 3 2 3 4 5 4 5 6 7 6 7 8 9 8 9 10 11
+3 4 1 2 3 4 3 4 5 6 5 6 7 8 7 8 9 10 9 10
+2 1 4 3 2 3 4 5 4 5 6 7 6 7 8 9 8 9 10 11
+3 2 3 2 3 4 3 4 5 6 5 6 7 8 7 8 9 10 9 10
+2 3 2 3 4 3 4 5 4 5 6 7 6 7 8 9 8 9 10 11
+3 4 3 4 3 4 5 4 5 6 5 6 7 8 7 8 9 10 9 10
+4 3 4 3 4 5 4 5 6 5 6 7 6 7 8 9 8 9 10 11
+5 4 5 4 5 4 5 6 5 6 7 6 7 8 7 8 9 10 9 10
+4 5 4 5 4 5 6 5 6 7 6 7 8 7 8 9 8 9 10 11
+5 6 5 6 5 6 5 6 7 6 7 8 7 8 9 8 9 10 9 10
+6 5 6 5 6 5 6 7 6 7 8 7 8 9 8 9 10 9 10 11
+7 6 7 6 7 6 7 6 7 8 7 8 9 8 9 10 9 10 11 10
+6 7 6 7 6 7 6 7 8 7 8 9 8 9 10 9 10 11 10 11
+7 8 7 8 7 8 7 8 7 8 9 8 9 10 9 10 11 10 11 12
+8 7 8 7 8 7 8 7 8 9 8 9 10 9 10 11 10 11 12 11
+9 8 9 8 9 8 9 8 9 8 9 10 9 10 11 10 11 12 11 12
+8 9 8 9 8 9 8 9 8 9 10 9 10 11 10 11 12 11 12 13
+9 10 9 10 9 10 9 10 9 10 9 10 11 10 11 12 11 12 13 12
+10 9 10 9 10 9 10 9 10 9 10 11 10 11 12 11 12 13 12 13
+11 10 11 10 11 10 11 10 11 10 11 10 11 12 11 12 13 12 13 14
+]]
+local it = knight_correct:gmatch('%d+')
+for x = 0, 19 do
+    for y = 0, 19 do
+        local result = it()
+        add_test('knight', function()
+            return ("%d %d"):format(x, y),
+                match_number(result)
+        end)
+
+    end
+end
+
 return cw
