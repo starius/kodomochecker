@@ -275,17 +275,17 @@ end)
 local function solveStaircase2(price, m)
     local binaryheap = require 'binaryheap'
     local h = binaryheap.minUnique()
-    h:insert(0, 's' .. 0)
+    h:insert(0, 0)
     for i = 1, #price do
         local removed_step = i - m - 1
         if removed_step >= 0 then
-            assert(h:remove('s' .. removed_step))
+            assert(h:remove(removed_step))
         end
         local min = h:peek()
-        h:insert(min + price[i], 's' .. i)
+        h:insert(min + price[i], i)
     end
-    local last_pos = h['s' .. #price]
-    return h[last_pos].value
+    local last_pos = h.reverse[#price]
+    return h.value[last_pos]
 end
 
 add_test('staircase2', function()
