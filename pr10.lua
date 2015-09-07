@@ -52,9 +52,18 @@ end
 
 -- one2three
 for a, aaa in pairs(map1to3) do
-    add_test('one2three', function()
-        return a:lower(), match_choice(aaa, all_aaa)
+
+    h.add_simple_test(pr10, 'one2three', function(check)
+        local input = a:lower()
+        local output = check(input)
+        if output == aaa then
+            return true
+        else
+            return false, ("Программа вывела %q, а ожидалось %q")
+                :format(output, aaa)
+        end
     end)
+
     add_test('one2three', function()
         return a:upper(), match_choice(aaa, all_aaa)
     end)

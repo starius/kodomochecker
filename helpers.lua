@@ -260,6 +260,18 @@ helpers.add_test = function(prac, name0, func)
     table.insert(prac, {name0, {func}})
 end
 
+helpers.add_simple_test = function(prac, name0, func)
+    helpers.add_test(prac, name0, function()
+        local func_coro = coroutine.create(func)
+        local check = coroutine.yield
+        local ok, input = assert(coroutine.resume(func_coro, check))
+        local function checker(...)
+            return coroutine.resume(func_coro, ...)
+        end
+        return input, checker
+    end)
+end
+
 helpers.get_tests = function(prac, name0)
     for _, v in pairs(prac) do
         local name, funcs = helpers.unPack(v)
